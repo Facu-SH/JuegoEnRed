@@ -8,8 +8,14 @@ namespace Managers
     {
         [SerializeField] private GameObject playerReference;
         [SerializeField] private Transform spawnPoint;
+        private string playerName;
+        private string roomCode;
+        
         void Start()
         {
+            var nameAndRoomCode = GameManager.Instance.GetNameAndRoomCode();
+            playerName = nameAndRoomCode.Key;
+            roomCode = nameAndRoomCode.Value;
             Debug.Log("Trying to connect to the server");
             PhotonNetwork.ConnectUsingSettings();
         }
@@ -25,7 +31,7 @@ namespace Managers
         {
             base.OnJoinedLobby();
             Debug.Log("Trying to join a room");
-            PhotonNetwork.JoinOrCreateRoom("Prueba",null,null);
+            PhotonNetwork.JoinOrCreateRoom(roomCode,null,null);
         }
 
         public override void OnJoinedRoom()
@@ -36,7 +42,7 @@ namespace Managers
             GameObject player = PhotonNetwork.Instantiate(playerReference.name, spawnPoint.position, Quaternion.identity);
             if (player.TryGetComponent<PlayerSetUp>(out PlayerSetUp playerSetUp))
             {
-                playerSetUp.StartUpLocalPlayer();
+                playerSetUp.StartUpLocalPlayer(playerName);
             }
 
         }

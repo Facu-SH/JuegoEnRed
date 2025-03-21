@@ -9,11 +9,12 @@ namespace PLayerScripts
         [SerializeField] private Movement movement;
         [SerializeField] private NameTag nameTagComponent;
 
-        public void StartUpLocalPlayer()
+        public void StartUpLocalPlayer(string playerName)
         {
             camera.SetActive(true);
             virtualCamera.SetActive(true);
             movement.enabled = true;
+            nameTagComponent.SetName(playerName);
         }
         
     }
