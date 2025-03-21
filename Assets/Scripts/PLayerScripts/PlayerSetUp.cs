@@ -7,6 +7,7 @@ namespace PLayerScripts
         [SerializeField] private GameObject camera;
         [SerializeField] private GameObject virtualCamera;
         [SerializeField] private Movement movement;
+        [SerializeField] private NameTag nameTagComponent;
 
         public void StartUpLocalPlayer()
         {
