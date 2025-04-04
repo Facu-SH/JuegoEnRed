@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 6
   maxVelocity: 10
+  mouseSensitivity: 100

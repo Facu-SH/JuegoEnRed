@@ -22,7 +22,7 @@ namespace PLayerScripts
 
         Vector3 CalculateMovement()
         {
-            Vector3 vecDir = new Vector3(inputDirection.x, 0, inputDirection.y).normalized;
+            Vector3 vecDir = (transform.right * inputDirection.x + transform.forward * inputDirection.y).normalized;
             vecDir *= data.Speed;
             
             Vector3 vel = rb.velocity;

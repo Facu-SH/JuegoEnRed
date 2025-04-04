@@ -7,8 +7,10 @@ namespace PLayerScripts
     {
         [SerializeField] private float speed;
         [SerializeField] private float maxVelocity;
+        [SerializeField] private float mouseSensitivity;
         
         public float Speed => speed;
         public float MaxVelocity => maxVelocity;
+        public float MouseSensitivity => mouseSensitivity;
     }
 }
