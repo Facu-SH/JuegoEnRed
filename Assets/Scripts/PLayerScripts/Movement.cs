@@ -1,5 +1,7 @@
 using System;
 using Cinemachine;
+using Managers;
+using Photon.Pun.Demo.PunBasics;
 using UnityEngine;
 
 namespace PLayerScripts
@@ -9,7 +11,6 @@ namespace PLayerScripts
         [SerializeField] private BasePLayerStats data;
         [SerializeField] private Rigidbody rb;
         [SerializeField] private Transform playerBody;
-        [SerializeField] private Transform gunBody;
         [SerializeField] private CinemachineVirtualCamera virtualCamera;
         
         private CinemachinePOV povComponent;
@@ -24,6 +25,7 @@ namespace PLayerScripts
 
         void Start()
         {
+            MyPLayerManager.Instance.SetPlayerMovementInstance(this);
             povComponent = virtualCamera.GetCinemachineComponent<CinemachinePOV>();
         }
         void Update()
@@ -62,11 +64,17 @@ namespace PLayerScripts
         private void OnEnable()
         {
             Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            if (povComponent != null)
+                povComponent.enabled = true;
         }
 
         private void OnDisable()
         {
             Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            if (povComponent != null)
+                povComponent.enabled = false;
         }
     }
 }

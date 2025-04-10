@@ -1,29 +1,29 @@
 ﻿using System;
+using Managers;
 using Photon.Pun;
 using Photon.Pun.Demo.PunBasics;
+using PLayerScripts;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using GameManager = Managers.GameManager;
 
 namespace UI
 {
     public class InGamePause : MonoBehaviour
     {
         [SerializeField] private GameObject pauseMenu;
+        private Movement playerMovement;
 
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                pauseMenu.SetActive(!pauseMenu.activeSelf);
-                Cursor.visible = !Cursor.visible;
+                ClosePauseAndResumeMovement();
             }
         }
-
         public void ClosePauseMenu()
         {
-            pauseMenu.SetActive(false);
+            ClosePauseAndResumeMovement();
         }
         
         public void GoToMenu()
@@ -31,6 +31,11 @@ namespace UI
             SceneManager.LoadScene(0);
             PhotonNetwork.LeaveRoom();
             PhotonNetwork.Disconnect();
+        }
+        private void ClosePauseAndResumeMovement()
+        {
+            pauseMenu.SetActive(!pauseMenu.activeSelf);
+            MyPLayerManager.Instance.TogglePlayerMovementActivation();
         }
     }
 }
