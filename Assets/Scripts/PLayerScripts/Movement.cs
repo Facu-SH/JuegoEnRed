@@ -1,4 +1,5 @@
 using System;
+using Cinemachine;
 using UnityEngine;
 
 namespace PLayerScripts
@@ -7,12 +8,30 @@ namespace PLayerScripts
     {
         [SerializeField] private BasePLayerStats data;
         [SerializeField] private Rigidbody rb;
+        [SerializeField] private Transform playerBody;
+        [SerializeField] private Transform gunBody;
+        [SerializeField] private CinemachineVirtualCamera virtualCamera;
         
+        private CinemachinePOV povComponent;
         private Vector2 inputDirection;
-        
+
+        private void Awake()
+        {
+            rb.interpolation = RigidbodyInterpolation.Interpolate;
+            rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
+        }
+
+        void Start()
+        {
+            povComponent = virtualCamera.GetCinemachineComponent<CinemachinePOV>();
+        }
         void Update()
         {
             inputDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            
+            float yaw = povComponent.m_HorizontalAxis.Value;
+            playerBody.rotation = Quaternion.Euler(0f, yaw, 0f);
         }
 
         private void FixedUpdate()
@@ -38,6 +57,16 @@ namespace PLayerScripts
             }
             
             return new Vector3();
+        }
+
+        private void OnEnable()
+        {
+            Cursor.visible = false;
+        }
+
+        private void OnDisable()
+        {
+            Cursor.visible = true;
         }
     }
 }

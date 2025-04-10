@@ -17,6 +17,7 @@ namespace UI
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 pauseMenu.SetActive(!pauseMenu.activeSelf);
+                Cursor.visible = !Cursor.visible;
             }
         }
 
