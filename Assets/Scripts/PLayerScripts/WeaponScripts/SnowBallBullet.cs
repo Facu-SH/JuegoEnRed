@@ -39,7 +39,10 @@ namespace PLayerScripts.WeaponScripts
             }
 
             if (photonView.IsMine)
+            {
+                PhotonNetwork.Instantiate(data.IceParticlesPrefab.name, transform.position, Quaternion.identity);
                 PhotonNetwork.Destroy(gameObject);
+            }
         }
     }
 }

@@ -40,6 +40,8 @@ namespace PLayerScripts
 
         private void Update()
         {
+            if (!photonView.IsMine) return;
+            
             inputDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
             float yaw = povComponent.m_HorizontalAxis.Value;

@@ -18,3 +18,5 @@ MonoBehaviour:
   lifeTime: 5
   playerLayerIndex: 7
   knockbackForce: 100
+  fireRate: 0.2
+  iceParticlesPrefab: {fileID: 5112403345868107898, guid: 6f34ef0d986e9db4199cf75805f79753, type: 3}

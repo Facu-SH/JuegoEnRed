@@ -13,6 +13,8 @@ namespace PLayerScripts.WeaponScripts
         [SerializeField] private float knockbackForce;
         [Header("Fire Rate")]
         [SerializeField] private float fireRate = 0.2f;
+        [Header("Particles")]
+        [SerializeField] private GameObject iceParticlesPrefab;  
         
         public GameObject SnowballPrefab => snowballPrefab;
         public float SnowballSpeed => snowballSpeed;
@@ -21,5 +23,6 @@ namespace PLayerScripts.WeaponScripts
         public int PlayerLayerIndex => playerLayerIndex;
         public float KnockbackForce => knockbackForce;
         public float FireRate => fireRate;
+        public GameObject IceParticlesPrefab => iceParticlesPrefab;
     }
 }
