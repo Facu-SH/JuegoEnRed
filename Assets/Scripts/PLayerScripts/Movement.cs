@@ -32,12 +32,13 @@ namespace PLayerScripts
             staminaRegenRate = data.SprintDuration / data.SprintCooldown;
         }
 
-        private void Start()
+        void Start()
         {
-            MyPLayerManager.Instance.SetPlayerMovementInstance(this);
+            if (photonView.IsMine)
+                MyPLayerManager.Instance.SetPlayerMovementInstance(this);
             povComponent = virtualCamera.GetCinemachineComponent<CinemachinePOV>();
         }
-
+        
         private void Update()
         {
             if (!photonView.IsMine) return;
@@ -75,6 +76,8 @@ namespace PLayerScripts
 
         private void FixedUpdate()
         {
+            if (!photonView.IsMine) return;
+            
             if (isJumping)
             {
                 rb.AddForce(Vector3.up * data.JumpForce, ForceMode.Impulse);
