@@ -13,5 +13,11 @@ MonoBehaviour:
   m_Name: newBasePLayerStats
   m_EditorClassIdentifier: 
   speed: 6
+  airControl: 0.5
   maxVelocity: 10
-  mouseSensitivity: 100
+  jumpForce: 5
+  groundLayerIndex: 6
+  sprintDuration: 4
+  sprintCooldown: 2.5
+  sprintMultiplier: 1.5
+  minStaminaToSprint: 2
