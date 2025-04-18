@@ -135,10 +135,6 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 2083881907657912741, guid: 3924de5716bd12d4b98620608e1b8c23, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2836690772459934030, guid: 3924de5716bd12d4b98620608e1b8c23, type: 3}
       propertyPath: m_Name
       value: PlayerComp

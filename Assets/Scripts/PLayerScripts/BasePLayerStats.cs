@@ -1,5 +1,4 @@
-﻿// BasePLayerStats.cs
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "newBasePLayerStats", menuName = "PLayer/BasePLayerStats")]
 public class BasePLayerStats : ScriptableObject

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07bc85ba18774683b4d98db4aece7a0f, type: 3}
+  m_Name: newSnowBallStats
+  m_EditorClassIdentifier: 
+  snowballPrefab: {fileID: 1996533054942051382, guid: b8b160b393201ff40b81ed93de5a976b, type: 3}
+  snowballSpeed: 15
+  velocityInfluence: 0.3
+  lifeTime: 5
+  playerLayerIndex: 7
+  knockbackForce: 100

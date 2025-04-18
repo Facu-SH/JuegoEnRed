@@ -1,10 +1,11 @@
 using Cinemachine;
 using Managers;
+using Photon.Pun;
 using UnityEngine;
 
 namespace PLayerScripts
 {
-    public class Movement : MonoBehaviour
+    public class Movement : MonoBehaviourPun
     {
         [SerializeField] private BasePLayerStats data;
         [SerializeField] private Rigidbody rb;
@@ -96,7 +97,16 @@ namespace PLayerScripts
 
             return inputDirection.magnitude > 0.3f ? velChange : Vector3.zero;
         }
+        
+        [PunRPC]
+        public void ApplyKnockback(Vector3 force, PhotonMessageInfo info)
+        {
+            // Solo el dueño del photonView del jugador aplica la fuerza
+            if (!photonView.IsMine) return;
 
+            // Asume que este mismo objeto tiene el Rigidbody del jugador
+            GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
+        }
         private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.layer == data.GroundLayerIndex)
