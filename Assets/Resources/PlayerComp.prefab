@@ -215,8 +215,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textMesh: {fileID: 6699215809013151347}
-  camera: {fileID: 966156189263118385}
-  virtualCamera: {fileID: 654522446924115607}
 --- !u!65 &2490442121552552373
 BoxCollider:
   m_ObjectHideFlags: 0

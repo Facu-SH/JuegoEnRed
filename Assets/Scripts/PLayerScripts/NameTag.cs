@@ -3,16 +3,15 @@ using Cinemachine;
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace PLayerScripts
 {
     public class NameTag : MonoBehaviourPun
     {
-        [SerializeField] private TextMeshPro textMesh;  
-        [SerializeField] private Camera camera;
-        [SerializeField] private CinemachineVirtualCamera virtualCamera;
+        [SerializeField] private TextMeshPro textMesh; 
         private string playerName = "";
-        private CinemachinePOV povComponent;
+        private Camera cam;
 
         public void SetName(string playerName)
         {
@@ -22,13 +21,17 @@ namespace PLayerScripts
 
         private void Start()
         {
-            povComponent = virtualCamera.GetCinemachineComponent<CinemachinePOV>();
+            cam = Camera.main;
         }
 
         private void Update()
         {
-            float yaw = povComponent.m_HorizontalAxis.Value;
-            textMesh.transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+            if (!photonView.IsMine)
+            {
+                Vector3 dir = transform.position - cam.transform.position;
+                dir.y = 0;
+                textMesh.transform.rotation = Quaternion.LookRotation(dir);
+            }
         }
         [PunRPC]
         public void SetNameRPC(string name)
