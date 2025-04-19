@@ -29,8 +29,6 @@ namespace PLayerScripts.WeaponScripts
         }
         void Shoot()
         {
-            Vector3 dir = spawnPoint.forward;
-            Debug.DrawRay(spawnPoint.position, dir * 2f, Color.red, 2f);
             Vector3 totalForce = spawnPoint.forward * data.SnowballSpeed + playerRb.velocity * data.VelocityInfluence;
             PhotonNetwork.Instantiate(
                 data.SnowballPrefab.name,
