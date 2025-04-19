@@ -1,4 +1,5 @@
-﻿using Photon.Pun;
+﻿using Managers;
+using Photon.Pun;
 using UnityEngine;
 
 namespace PLayerScripts.WeaponScripts
@@ -10,7 +11,12 @@ namespace PLayerScripts.WeaponScripts
         [SerializeField] private Rigidbody playerRb;
         
         private float nextFireTime = 0f;
-
+        
+        void Start()
+        {
+            if (photonView.IsMine)
+                MyPLayerManager.Instance.SetPlayerShootingInstance(this);
+        }
         void Update()
         {
             if (!photonView.IsMine) return;

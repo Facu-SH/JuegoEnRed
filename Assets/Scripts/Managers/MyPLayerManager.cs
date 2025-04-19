@@ -1,4 +1,5 @@
 ﻿using PLayerScripts;
+using PLayerScripts.WeaponScripts;
 using UnityEngine;
 
 namespace Managers
@@ -8,6 +9,7 @@ namespace Managers
         public static MyPLayerManager Instance { get; private set; }
         
         private Movement playerMovement;
+        private Shooting playerShooting;
         private string roomCode;
         
         private void Awake()
@@ -26,9 +28,14 @@ namespace Managers
         {
             playerMovement = _playerMovement;
         }
-        public void TogglePlayerMovementActivation()
+        public void SetPlayerShootingInstance(Shooting _shooting)
+        {
+            playerShooting = _shooting;
+        }
+        public void TogglePlayerMovementAndShootingActivation()
         {
             playerMovement.enabled = !playerMovement.enabled;
+            playerShooting.enabled = !playerShooting.enabled;
         }
     }
 }

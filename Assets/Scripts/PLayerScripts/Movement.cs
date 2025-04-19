@@ -106,10 +106,7 @@ namespace PLayerScripts
         [PunRPC]
         public void ApplyKnockback(Vector3 force, PhotonMessageInfo info)
         {
-            // Solo el dueño del photonView del jugador aplica la fuerza
             if (!photonView.IsMine) return;
-
-            // Asume que este mismo objeto tiene el Rigidbody del jugador
             GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
         }
         private void OnTriggerEnter(Collider other)

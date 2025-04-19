@@ -35,7 +35,7 @@ namespace UI
         private void ClosePauseAndResumeMovement()
         {
             pauseMenu.SetActive(!pauseMenu.activeSelf);
-            MyPLayerManager.Instance.TogglePlayerMovementActivation();
+            MyPLayerManager.Instance.TogglePlayerMovementAndShootingActivation();
         }
     }
 }
