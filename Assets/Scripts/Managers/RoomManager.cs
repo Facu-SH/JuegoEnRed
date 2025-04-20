@@ -44,15 +44,16 @@ namespace Managers
                 ? TeamColor.Blue
                 : TeamColor.Red;
             
-            PhotonNetwork.LocalPlayer.SetCustomProperties(
-                new ExitGames.Client.Photon.Hashtable{{ "TeamColor", myTeam }}
-            );
-            
+            object[] initData = new object[]{ (int)myTeam };
+
             GameObject player = PhotonNetwork.Instantiate(
                 playerReference.name,
                 spawnPoint.position,
-                Quaternion.identity
+                Quaternion.identity,
+                0,
+                initData
             );
+            
             if (player.TryGetComponent<PlayerSetUp>(out PlayerSetUp playerSetUp))
             {
                 playerSetUp.StartUpLocalPlayer(playerName);

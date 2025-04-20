@@ -18,11 +18,9 @@ namespace PLayerScripts.WeaponScripts
         
         void Awake()
         {
-            if (photonView.Owner.CustomProperties.TryGetValue("TeamColor", out var raw) 
-                && raw is TeamColor tc)
-            {
-                team = tc;
-            }
+            var inst = photonView.InstantiationData;
+            if (inst != null && inst.Length > 0 && inst[0] is int idx)
+                team = (TeamColor)idx;
         }
         
         void Start()
