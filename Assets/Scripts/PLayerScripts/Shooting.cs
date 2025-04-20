@@ -39,12 +39,12 @@ namespace PLayerScripts.WeaponScripts
         void Shoot()
         {
             Vector3 totalForce = spawnPoint.forward * data.SnowballSpeed + playerRb.velocity * data.VelocityInfluence;
-            GameObject ball =PhotonNetwork.Instantiate(
+            PhotonNetwork.Instantiate(
                 data.SnowballPrefab.name,
                 spawnPoint.position,
                 spawnPoint.rotation,
                 0,
-                new object[] { totalForce }
+                new object[] { totalForce, team }
             );
         }
     }

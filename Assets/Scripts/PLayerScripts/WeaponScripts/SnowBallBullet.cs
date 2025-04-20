@@ -17,11 +17,8 @@ namespace PLayerScripts.WeaponScripts
             if (initData != null && initData.Length > 0)
             {
                 Vector3 force = (Vector3)initData[0];
+                team = (TeamColor)initData[1];
                 rb.AddForce(force, ForceMode.Impulse);
-            }
-            if (photonView.Owner.CustomProperties.TryGetValue("TeamColor", out var raw) && raw is TeamColor tc)
-            {
-                team = tc;
             }
 
             Destroy(gameObject, data.LifeTime);

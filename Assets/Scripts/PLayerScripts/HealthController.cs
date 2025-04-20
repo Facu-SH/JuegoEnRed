@@ -19,10 +19,13 @@ namespace PLayerScripts
             GameManager.Instance.OnPlayerDamage(health);
         }
 
-        private void Start()
+        private void Awake()
         {
+            var inst = photonView.InstantiationData;
+            if (inst != null && inst.Length > 0 && inst[0] is int idx)
+                team = (TeamColor)idx;
+            
             GameManager.Instance.OnPlayerDamage(health);
-            team = MyPlayerManager.Instance.Team;
         }
 
         public void GetDamage(int damage)
@@ -38,7 +41,7 @@ namespace PLayerScripts
 
             if (health <= 0)
             {
-                photonView.RPC(nameof(RPC_NotifyDeath), RpcTarget.All, (int)MyPlayerManager.Instance.Team);
+                photonView.RPC(nameof(RPC_NotifyDeath), RpcTarget.All, (int)team);
                 Die();
             }
         }
