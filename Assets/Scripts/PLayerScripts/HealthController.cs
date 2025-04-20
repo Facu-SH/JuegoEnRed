@@ -2,6 +2,7 @@
 using Enums;
 using Managers;
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 using UnityEngine;
 
 namespace PLayerScripts
@@ -9,17 +10,8 @@ namespace PLayerScripts
     public class HealthController : MonoBehaviourPun
     {
         [SerializeField] private BasePLayerStats data;
-        [SerializeField] private TeamColor team;
+        private TeamColor team;
         private int health;
-
-        private void Awake()
-        {
-            if (photonView.Owner.CustomProperties.TryGetValue("TeamColor", out var raw) 
-                && raw is TeamColor tc)
-            {
-                team = tc;
-            }
-        }
 
         private void OnEnable()
         {
@@ -30,6 +22,7 @@ namespace PLayerScripts
         private void Start()
         {
             GameManager.Instance.OnPlayerDamage(health);
+            team = MyPlayerManager.Instance.Team;
         }
 
         public void GetDamage(int damage)
@@ -45,7 +38,7 @@ namespace PLayerScripts
 
             if (health <= 0)
             {
-                photonView.RPC(nameof(RPC_NotifyDeath), RpcTarget.All, (int)team);
+                photonView.RPC(nameof(RPC_NotifyDeath), RpcTarget.All, (int)MyPlayerManager.Instance.Team);
                 Die();
             }
         }
