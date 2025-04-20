@@ -40,11 +40,14 @@ namespace PLayerScripts.WeaponScripts
                     );
                 }
 
-                if (other.TryGetComponent(out ITeam otherTeam) && otherTeam.Team != team)
+                if (other.TryGetComponent(out ITeam otherTeam))
                 {
-                    if (other.TryGetComponent(out IDamageable damageable))
+                    if (otherTeam.Team != team)
                     {
-                        damageable.GetDamage(data.Damage);
+                        if (other.TryGetComponent(out IDamageable damageable))
+                        {
+                            damageable.GetDamage(data.Damage);
+                        }
                     }
                 }
             }
