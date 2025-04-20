@@ -1,5 +1,6 @@
 ﻿using System;
 using Enums;
+using Interfaces;
 using Managers;
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
@@ -7,7 +8,7 @@ using UnityEngine;
 
 namespace PLayerScripts
 {
-    public class HealthController : MonoBehaviourPun
+    public class HealthController : MonoBehaviourPun, IDamageable
     {
         [SerializeField] private BasePLayerStats data;
         private TeamColor team;
