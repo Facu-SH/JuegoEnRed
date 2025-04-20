@@ -10,7 +10,6 @@ namespace Managers
         
         private Movement playerMovement;
         private Shooting playerShooting;
-        private string roomCode;
         
         private void Awake()
         {

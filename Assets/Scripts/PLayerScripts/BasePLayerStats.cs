@@ -3,6 +3,8 @@
 [CreateAssetMenu(fileName = "newBasePLayerStats", menuName = "PLayer/BasePLayerStats")]
 public class BasePLayerStats : ScriptableObject
 {
+    [Header("Vida")]
+    [SerializeField] private int maxHealth;
     [Header("Movimiento")]
     [Tooltip("Velocidad base")]
     [SerializeField] private float speed;
@@ -25,6 +27,7 @@ public class BasePLayerStats : ScriptableObject
     [Tooltip("Minimo de Stamina para volver a usar el sprint una vez llega a 0")]
     [SerializeField] private float minStaminaToSprint = 1f;
 
+    public int MaxHealth => maxHealth;
     public float Speed => speed;
     public float JumpForce => jumpForce;
     public float AirControl => airControl;

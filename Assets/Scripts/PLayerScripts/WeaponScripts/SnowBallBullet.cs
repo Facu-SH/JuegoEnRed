@@ -1,4 +1,6 @@
-﻿using Photon.Pun;
+﻿using Enums;
+using Interfaces;
+using Photon.Pun;
 using UnityEngine;
 
 namespace PLayerScripts.WeaponScripts
@@ -7,6 +9,7 @@ namespace PLayerScripts.WeaponScripts
     {
         [SerializeField] private SnowBallStats data;
         [SerializeField] private Rigidbody rb;
+        private TeamColor team;
 
         void Awake()
         {
@@ -16,6 +19,10 @@ namespace PLayerScripts.WeaponScripts
                 Vector3 force = (Vector3)initData[0];
                 rb.AddForce(force, ForceMode.Impulse);
             }
+            if (photonView.Owner.CustomProperties.TryGetValue("TeamColor", out var raw) && raw is TeamColor tc)
+            {
+                team = tc;
+            }
 
             Destroy(gameObject, data.LifeTime);
         }
@@ -24,8 +31,7 @@ namespace PLayerScripts.WeaponScripts
         {
             if (other.gameObject.layer == data.PlayerLayerIndex)
             {
-                PhotonView targetPv = other.GetComponent<PhotonView>();
-                if (targetPv != null)
+                if (other.TryGetComponent(out PhotonView targetPv))
                 {
                     Vector3 dir = (other.transform.position - transform.position).normalized;
                     Vector3 knockForce = dir * data.KnockbackForce;
@@ -36,6 +42,14 @@ namespace PLayerScripts.WeaponScripts
                         knockForce
                     );
                 }
+
+                if (other.TryGetComponent(out ITeam otherTeam) && otherTeam.Team != team)
+                {
+                    if (other.TryGetComponent(out IDamageable damageable))
+                    {
+                        damageable.GetDamage(data.Damage);
+                    }
+                }
             }
 
             if (photonView.IsMine)
@@ -44,5 +58,6 @@ namespace PLayerScripts.WeaponScripts
                 PhotonNetwork.Destroy(gameObject);
             }
         }
+
     }
 }

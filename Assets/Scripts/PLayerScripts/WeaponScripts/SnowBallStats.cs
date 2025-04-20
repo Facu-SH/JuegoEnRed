@@ -11,6 +11,7 @@ namespace PLayerScripts.WeaponScripts
         [SerializeField] private float lifeTime = 5f;
         [SerializeField] private int playerLayerIndex;
         [SerializeField] private float knockbackForce;
+        [SerializeField] private int damage;
         [Header("Fire Rate")]
         [SerializeField] private float fireRate = 0.2f;
         [Header("Particles")]
@@ -22,6 +23,7 @@ namespace PLayerScripts.WeaponScripts
         public float LifeTime => lifeTime;
         public int PlayerLayerIndex => playerLayerIndex;
         public float KnockbackForce => knockbackForce;
+        public int Damage => damage;
         public float FireRate => fireRate;
         public GameObject IceParticlesPrefab => iceParticlesPrefab;
     }

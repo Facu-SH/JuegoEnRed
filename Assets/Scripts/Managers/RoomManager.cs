@@ -1,3 +1,4 @@
+using Enums;
 using Photon.Pun;
 using PLayerScripts;
 using UnityEngine;
@@ -39,7 +40,19 @@ namespace Managers
             base.OnJoinedRoom();
             Debug.Log("Joined the room");
             
-            GameObject player = PhotonNetwork.Instantiate(playerReference.name, spawnPoint.position, Quaternion.identity);
+            TeamColor myTeam = PhotonNetwork.LocalPlayer.ActorNumber % 2 == 0
+                ? TeamColor.Blue
+                : TeamColor.Red;
+            
+            PhotonNetwork.LocalPlayer.SetCustomProperties(
+                new ExitGames.Client.Photon.Hashtable{{ "TeamColor", myTeam }}
+            );
+            
+            GameObject player = PhotonNetwork.Instantiate(
+                playerReference.name,
+                spawnPoint.position,
+                Quaternion.identity
+            );
             if (player.TryGetComponent<PlayerSetUp>(out PlayerSetUp playerSetUp))
             {
                 playerSetUp.StartUpLocalPlayer(playerName);
