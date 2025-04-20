@@ -1,6 +1,4 @@
-﻿using Enums;
-
-namespace Interfaces
+﻿namespace Interfaces
 {
     public interface IDamageable
     {

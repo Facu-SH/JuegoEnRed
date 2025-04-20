@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c13c573b0064054ba9b38747a27fca9, type: 3}
   m_Name: newBasePLayerStats
   m_EditorClassIdentifier: 
+  maxHealth: 100
   speed: 6
   airControl: 0.5
   maxVelocity: 10

@@ -1,9 +1,6 @@
-﻿using System;
-using Managers;
+﻿using Managers;
 using Photon.Pun;
-using Photon.Pun.Demo.PunBasics;
 using PLayerScripts;
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -35,7 +32,7 @@ namespace UI
         private void ClosePauseAndResumeMovement()
         {
             pauseMenu.SetActive(!pauseMenu.activeSelf);
-            MyPLayerManager.Instance.TogglePlayerMovementAndShootingActivation();
+            MyPlayerManager.Instance.TogglePlayerControls();
         }
     }
 }

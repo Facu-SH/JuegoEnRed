@@ -28,7 +28,7 @@ namespace PLayerScripts.WeaponScripts
         void Start()
         {
             if (photonView.IsMine)
-                MyPLayerManager.Instance.SetPlayerShootingInstance(this);
+                MyPlayerManager.Instance.SetPlayerShootingInstance(this);
         }
         void Update()
         {

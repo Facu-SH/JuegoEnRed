@@ -42,6 +42,8 @@ MonoBehaviour:
   - SetNameRPC
   - ApplyKnockback
   - RPC_TakeDamage
+  - RPC_AddPoints
+  - RPC_NotifyDeath
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

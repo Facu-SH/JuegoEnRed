@@ -1,5 +1,4 @@
-﻿using Photon.Pun.Demo.PunBasics;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using GameManager = Managers.GameManager;

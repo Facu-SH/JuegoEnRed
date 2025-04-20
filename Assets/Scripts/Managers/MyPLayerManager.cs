@@ -1,16 +1,20 @@
-﻿using PLayerScripts;
+﻿using Enums;
+using PLayerScripts;
 using PLayerScripts.WeaponScripts;
 using UnityEngine;
 
 namespace Managers
 {
-    public class MyPLayerManager : MonoBehaviour
+    public class MyPlayerManager : MonoBehaviour
     {
-        public static MyPLayerManager Instance { get; private set; }
-        
-        private Movement playerMovement;
+        public static MyPlayerManager Instance { get; private set; }
+
         private Shooting playerShooting;
-        
+        private Movement playerMovement;
+        public TeamColor Team => playerShooting != null
+            ? playerShooting.Team
+            : default;
+
         private void Awake()
         {
             if (Instance != null)
@@ -18,23 +22,24 @@ namespace Managers
                 Destroy(gameObject);
                 return;
             }
-
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
-
-        public void SetPlayerMovementInstance(Movement _playerMovement)
+        
+        public void SetPlayerShootingInstance(Shooting shooting)
         {
-            playerMovement = _playerMovement;
+            playerShooting = shooting;
         }
-        public void SetPlayerShootingInstance(Shooting _shooting)
+        public void SetPlayerMovementInstance(Movement movement)
         {
-            playerShooting = _shooting;
+            playerMovement = movement;
         }
-        public void TogglePlayerMovementAndShootingActivation()
+        
+        public void TogglePlayerControls()
         {
             playerMovement.enabled = !playerMovement.enabled;
-            playerShooting.enabled = !playerShooting.enabled;
+            if (playerShooting != null)
+                playerShooting.enabled = !playerShooting.enabled;
         }
     }
 }

@@ -1,9 +1,6 @@
-﻿using System;
-using Cinemachine;
-using Photon.Pun;
+﻿using Photon.Pun;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace PLayerScripts
 {
