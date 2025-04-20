@@ -9,6 +9,7 @@ namespace UI
     public class Menu : MonoBehaviour
     {
         [SerializeField] private GameObject changeNameMenu;
+        [SerializeField] private GameObject settingsMenu;
         [SerializeField] private TextMeshProUGUI playerName;
         [SerializeField] private TextMeshProUGUI roomCode;
         [SerializeField] private TMP_InputField playerNameInput;
@@ -27,6 +28,15 @@ namespace UI
         public void CloseChangeNameMenu()
         {
             changeNameMenu.SetActive(false);
+        }
+        public void OpenSettingsMenu()
+        {
+            settingsMenu.SetActive(true);
+        }
+
+        public void CloseSettingsMenu()
+        {
+            settingsMenu.SetActive(false);
         }
         public void ChangePlayerName()
         {
