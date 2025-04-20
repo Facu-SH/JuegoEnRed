@@ -37,6 +37,8 @@ namespace PLayerScripts
         [PunRPC]
         private void RPC_TakeDamage(int damage)
         {
+            if (!photonView.IsMine) return;
+
             health -= damage;
             GameManager.Instance.OnPlayerDamage(health);
 
@@ -46,6 +48,7 @@ namespace PLayerScripts
                 Die();
             }
         }
+
 
         [PunRPC]
         private void RPC_NotifyDeath(int deadTeamID)
