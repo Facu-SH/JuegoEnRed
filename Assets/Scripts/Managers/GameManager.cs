@@ -8,7 +8,7 @@ namespace Managers
     public class GameManager : MonoBehaviourPun
     {
         public static GameManager Instance { get; private set; }
-
+        
         private LevelUI levelUI;
         private int[] teamScores = new int[2];
         private string playerName;

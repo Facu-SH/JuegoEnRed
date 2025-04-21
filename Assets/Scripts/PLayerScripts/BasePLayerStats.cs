@@ -26,6 +26,8 @@ public class BasePLayerStats : ScriptableObject
     [SerializeField] private float sprintMultiplier = 1.5f;
     [Tooltip("Minimo de Stamina para volver a usar el sprint una vez llega a 0")]
     [SerializeField] private float minStaminaToSprint = 1f;
+    [Header("Materials")]
+    [SerializeField] private Material[] teamMaterials;
 
     public int MaxHealth => maxHealth;
     public float Speed => speed;
@@ -39,4 +41,5 @@ public class BasePLayerStats : ScriptableObject
     public float SprintCooldown => sprintCooldown;
     public float SprintMultiplier => sprintMultiplier;
     public float MinStaminaToSprint => minStaminaToSprint;
+    public Material[] TeamMaterials => teamMaterials;
 }

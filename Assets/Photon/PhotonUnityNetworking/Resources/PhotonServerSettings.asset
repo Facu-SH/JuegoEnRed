@@ -44,6 +44,8 @@ MonoBehaviour:
   - RPC_TakeDamage
   - RPC_AddPoints
   - RPC_NotifyDeath
+  - RPC_Despawn
+  - RPC_SetTeamMaterial
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

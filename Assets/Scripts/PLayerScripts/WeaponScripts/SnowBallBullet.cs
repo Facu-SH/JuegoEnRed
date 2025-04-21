@@ -23,41 +23,30 @@ namespace PLayerScripts.WeaponScripts
 
             Destroy(gameObject, data.LifeTime);
         }
-
+        
         void OnTriggerEnter(Collider other)
         {
+            if (!photonView.IsMine) return;
+
             if (other.gameObject.layer == data.PlayerLayerIndex)
             {
-                if (other.TryGetComponent(out PhotonView targetPv))
+                if (other.TryGetComponent<PhotonView>(out var targetPv))
                 {
-                    Vector3 dir = (other.transform.position - transform.position).normalized;
-                    Vector3 knockForce = dir * data.KnockbackForce;
-
-                    targetPv.RPC(
-                        nameof(Movement.ApplyKnockback),
-                        targetPv.Owner,
-                        knockForce
-                    );
+                    var dir = (other.transform.position - transform.position).normalized;
+                    var knockForce = dir * data.KnockbackForce;
+                    targetPv.RPC(nameof(Movement.ApplyKnockback), targetPv.Owner, knockForce);
                 }
-
-                if (other.TryGetComponent(out ITeam otherTeam))
+                
+                if (other.TryGetComponent<ITeam>(out var otherTeam) && otherTeam.Team != team
+                                                                    && other.TryGetComponent<IDamageable>(out var damageable))
                 {
-                    if (otherTeam.Team != team)
-                    {
-                        if (other.TryGetComponent(out IDamageable damageable))
-                        {
-                            damageable.GetDamage(data.Damage);
-                        }
-                    }
+                    damageable.GetDamage(data.Damage);
                 }
             }
-
-            if (photonView.IsMine)
-            {
-                PhotonNetwork.Instantiate(data.IceParticlesPrefab.name, transform.position, Quaternion.identity);
-                PhotonNetwork.Destroy(gameObject);
-            }
+            PhotonNetwork.Instantiate(data.IceParticlesPrefab.name, transform.position, Quaternion.identity);
+            PhotonNetwork.Destroy(gameObject);
         }
+
 
     }
 }

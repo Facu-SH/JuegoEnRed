@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1096152964071497590}
   - component: {fileID: 9190707445246373111}
   - component: {fileID: 2410484597114764047}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SnowBallBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -33,7 +33,7 @@ namespace PLayerScripts
         {
             photonView.RPC(nameof(RPC_TakeDamage), RpcTarget.All, damage);
         }
-
+        
         [PunRPC]
         private void RPC_TakeDamage(int damage)
         {
@@ -45,20 +45,23 @@ namespace PLayerScripts
             if (health <= 0)
             {
                 photonView.RPC(nameof(RPC_NotifyDeath), RpcTarget.All, (int)team);
-                Die();
+
+                photonView.RPC(nameof(RPC_Despawn), RpcTarget.All);
             }
         }
 
-
+        [PunRPC]
+        private void RPC_Despawn()
+        {
+            MyPlayerManager.Instance.HandleDeath(gameObject);
+        }
+        
         [PunRPC]
         private void RPC_NotifyDeath(int deadTeamID)
         {
+            if (!PhotonNetwork.IsMasterClient) return;
             GameManager.Instance.OnPlayerDeath(deadTeamID);
         }
-
-        private void Die()
-        {
-            gameObject.SetActive(false);
-        }
+        
     }
 }

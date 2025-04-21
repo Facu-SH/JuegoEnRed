@@ -22,3 +22,6 @@ MonoBehaviour:
   sprintCooldown: 2.5
   sprintMultiplier: 1.5
   minStaminaToSprint: 2
+  teamMaterials:
+  - {fileID: 2100000, guid: 01f606d992db16a44bd31582c4398d92, type: 2}
+  - {fileID: 2100000, guid: b9eef761db3471142b6c1bbfd61f1717, type: 2}
