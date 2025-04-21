@@ -23,6 +23,11 @@ namespace Managers
             }
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            
+            if (photonView.ViewID == 1)
+            {
+                photonView.ViewID = PhotonNetwork.AllocateViewID(true);
+            }
         }
 
         private void Update()

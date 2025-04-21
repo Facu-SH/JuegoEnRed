@@ -25,7 +25,7 @@ namespace UI
         
         public void GoToMenu()
         {
-            SceneManager.LoadScene(0);
+            SceneManager.LoadScene(1);
             PhotonNetwork.LeaveRoom();
             PhotonNetwork.Disconnect();
         }

@@ -16,7 +16,7 @@ namespace UI
         public void GoToGameScene()
         {
             GameManager.Instance.SetNameAndRoomCode(playerNameInput.text, roomCodeInput.text);
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(2);
         }
 
         public void OpenChangeNameMenu()
