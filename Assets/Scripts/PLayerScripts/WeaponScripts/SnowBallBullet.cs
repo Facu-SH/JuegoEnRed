@@ -9,6 +9,7 @@ namespace PLayerScripts.WeaponScripts
     {
         [SerializeField] private SnowBallStats data;
         [SerializeField] private Rigidbody rb;
+
         private TeamColor team;
 
         void Awake()
@@ -23,7 +24,7 @@ namespace PLayerScripts.WeaponScripts
 
             Destroy(gameObject, data.LifeTime);
         }
-        
+
         void OnTriggerEnter(Collider other)
         {
             if (!photonView.IsMine) return;
@@ -34,19 +35,19 @@ namespace PLayerScripts.WeaponScripts
                 {
                     var dir = (other.transform.position - transform.position).normalized;
                     var knockForce = dir * data.KnockbackForce;
-                    targetPv.RPC(nameof(Movement.ApplyKnockback), targetPv.Owner, knockForce);
+                    targetPv.RPC(nameof(Movement.RPC_ApplyKnockback), targetPv.Owner, knockForce);
                 }
-                
+
                 if (other.TryGetComponent<ITeam>(out var otherTeam) && otherTeam.Team != team
-                                                                    && other.TryGetComponent<IDamageable>(out var damageable))
+                                                                    && other.TryGetComponent<IDamageable>(
+                                                                        out var damageable))
                 {
                     damageable.GetDamage(data.Damage);
                 }
             }
+
             PhotonNetwork.Instantiate(data.IceParticlesPrefab.name, transform.position, Quaternion.identity);
             PhotonNetwork.Destroy(gameObject);
         }
-
-
     }
 }

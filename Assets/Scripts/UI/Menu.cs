@@ -9,40 +9,34 @@ namespace UI
 {
     public class Menu : MonoBehaviour
     {
-        [Header("Panels")]
-        [SerializeField] private GameObject changeNameMenu;
+        [Header("Panels")] [SerializeField] private GameObject changeNameMenu;
         [SerializeField] private GameObject settingsMenu;
 
-        [Header("Displays")]
-        [SerializeField] private TextMeshProUGUI playerNameDisplay;
+        [Header("Displays")] [SerializeField] private TextMeshProUGUI playerNameDisplay;
         [SerializeField] private TextMeshProUGUI roomCodeDisplay;
 
-        [Header("Inputs")]
-        [SerializeField] private TMP_InputField playerNameInput;
+        [Header("Inputs")] [SerializeField] private TMP_InputField playerNameInput;
         [SerializeField] private TMP_InputField roomCodeInput;
 
-        [Header("Buttons")]
-        [SerializeField] private Button joinButton;
+        [Header("Buttons")] [SerializeField] private Button joinButton;
         [SerializeField] private Button exitButton;
 
-        [Header("Feedback")]
-        [SerializeField] private TextMeshProUGUI feedbackText;
+        [Header("Feedback")] [SerializeField] private TextMeshProUGUI feedbackText;
 
         private void Awake()
         {
             joinButton.interactable = false;
             feedbackText.text = "";
-            
-            var net = PhotonNetworkManager.Instance;
-            net.OnConnectedToMasterEvent += OnConnectedToMaster;
-            net.OnJoinRoomFailedHandler += OnJoinRoomFailed;
-            net.OnNetworkDisconnected += OnNetworkDisconnected;
-            net.OnJoinedRoomEvent += OnJoinedRoom;
-            
+
+            PhotonNetworkManager.Instance.OnConnectedToMasterEvent += OnConnectedToMaster;
+            PhotonNetworkManager.Instance.OnJoinRoomFailedHandler += OnJoinRoomFailed;
+            PhotonNetworkManager.Instance.OnNetworkDisconnected += OnNetworkDisconnected;
+            PhotonNetworkManager.Instance.OnJoinedRoomEvent += OnJoinedRoom;
+
             joinButton.onClick.AddListener(OnJoinClicked);
             exitButton.onClick.AddListener(Application.Quit);
 
-            if (net.IsConnectedToMasterServer)
+            if (PhotonNetworkManager.Instance.IsConnectedToMasterServer)
             {
                 OnConnectedToMaster();
             }
@@ -50,14 +44,10 @@ namespace UI
 
         private void OnDestroy()
         {
-            if (PhotonNetworkManager.Instance != null)
-            {
-                var net = PhotonNetworkManager.Instance;
-                net.OnConnectedToMasterEvent -= OnConnectedToMaster;
-                net.OnJoinRoomFailedHandler -= OnJoinRoomFailed;
-                net.OnNetworkDisconnected -= OnNetworkDisconnected;
-                net.OnJoinedRoomEvent -= OnJoinedRoom;
-            }
+            PhotonNetworkManager.Instance.OnConnectedToMasterEvent -= OnConnectedToMaster;
+            PhotonNetworkManager.Instance.OnJoinRoomFailedHandler -= OnJoinRoomFailed;
+            PhotonNetworkManager.Instance.OnNetworkDisconnected -= OnNetworkDisconnected;
+            PhotonNetworkManager.Instance.OnJoinedRoomEvent -= OnJoinedRoom;
 
             joinButton.onClick.RemoveListener(OnJoinClicked);
             exitButton.onClick.RemoveListener(Application.Quit);
@@ -80,23 +70,23 @@ namespace UI
             joinButton.interactable = false;
         }
 
-        public void OnJoinedRoom()
-        {
-            SceneManager.LoadScene("MainScene");
-        }
-
         private void OnJoinClicked()
         {
             feedbackText.text = "Intentando unirse...";
             playerNameDisplay.text = playerNameInput.text;
-            roomCodeDisplay.text    = roomCodeInput.text;
-            
+            roomCodeDisplay.text = roomCodeInput.text;
+
             GameManager.Instance.SetNameAndRoomCode(
-                playerNameInput.text, 
+                playerNameInput.text,
                 roomCodeInput.text
             );
-            
+
             PhotonNetworkManager.Instance.JoinRoom(roomCodeInput.text);
+        }
+
+        public void OnJoinedRoom()
+        {
+            SceneManager.LoadScene("MainScene");
         }
 
         public void OpenChangeNameMenu()
@@ -133,6 +123,5 @@ namespace UI
         {
             SceneManager.LoadScene(1);
         }
-        
     }
 }

@@ -6,15 +6,9 @@ namespace PLayerScripts
 {
     public class NameTag : MonoBehaviourPun
     {
-        [SerializeField] private TextMeshPro textMesh; 
+        [SerializeField] private TextMeshPro textMesh;
         private string playerName = "";
         private Camera cam;
-
-        public void SetName(string playerName)
-        {
-            this.playerName = playerName;
-            photonView.RPC("SetNameRPC", RpcTarget.AllBuffered, this.playerName);
-        }
 
         private void Start()
         {
@@ -30,8 +24,15 @@ namespace PLayerScripts
                 textMesh.transform.rotation = Quaternion.LookRotation(dir);
             }
         }
+
+        public void SetName(string playerName)
+        {
+            this.playerName = playerName;
+            photonView.RPC(nameof(RPC_SetNameRPC), RpcTarget.AllBuffered, this.playerName);
+        }
+
         [PunRPC]
-        public void SetNameRPC(string name)
+        public void RPC_SetNameRPC(string name)
         {
             textMesh.text = name;
         }

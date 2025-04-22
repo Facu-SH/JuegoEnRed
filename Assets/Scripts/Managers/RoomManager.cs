@@ -47,6 +47,7 @@ namespace Managers
             if (player.TryGetComponent<PlayerSetUp>(out var setup))
                 setup.StartUpLocalPlayer(playerName);
         }
+
         private void OnLeftRoom()
         {
             SceneManager.LoadScene(1);

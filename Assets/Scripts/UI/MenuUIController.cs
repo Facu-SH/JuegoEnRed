@@ -17,18 +17,16 @@ namespace UI
         private void Awake()
         {
             joinButton.onClick.AddListener(OnJoinClicked);
-            var net = PhotonNetworkManager.Instance;
-            net.OnJoinRoomFailedHandler += HandleJoinRoomFailed;
-            net.OnNetworkDisconnected += HandleDisconnected;
+
+            PhotonNetworkManager.Instance.OnJoinRoomFailedHandler += HandleJoinRoomFailed;
+            PhotonNetworkManager.Instance.OnNetworkDisconnected += HandleDisconnected;
         }
 
         private void OnDestroy()
         {
-            if (PhotonNetworkManager.Instance != null)
-            {
-                PhotonNetworkManager.Instance.OnJoinRoomFailedHandler -= HandleJoinRoomFailed;
-                PhotonNetworkManager.Instance.OnNetworkDisconnected -= HandleDisconnected;
-            }
+            PhotonNetworkManager.Instance.OnJoinRoomFailedHandler -= HandleJoinRoomFailed;
+            PhotonNetworkManager.Instance.OnNetworkDisconnected -= HandleDisconnected;
+
             joinButton.onClick.RemoveListener(OnJoinClicked);
         }
 
@@ -52,15 +50,16 @@ namespace UI
                 case DisconnectCause.ServerTimeout:
                     errorText.text = "Tiempo de conexión agotado con el servidor.";
                     break;
-                
+
                 case DisconnectCause.ExceptionOnConnect:
                     errorText.text = "No se pudo conectar al Master Server.";
                     break;
-                
+
                 default:
                     errorText.text = $"Desconectado: {cause}";
                     break;
             }
+
             errorPanel.SetActive(true);
         }
 

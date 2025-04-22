@@ -9,15 +9,18 @@ namespace Managers
     public class GameManager : MonoBehaviourPun
     {
         public static GameManager Instance { get; private set; }
+
         [SerializeField] private LevelVariables data;
+
         private LevelUI levelUI;
-        private Dictionary<int,int> teamScores = new Dictionary<int,int>
+        private string playerName;
+        private string roomCode;
+
+        private Dictionary<int, int> teamScores = new Dictionary<int, int>
         {
             { 0, 0 },
             { 1, 0 }
         };
-        private string playerName;
-        private string roomCode;
 
         private void Awake()
         {
@@ -26,6 +29,7 @@ namespace Managers
                 Destroy(gameObject);
                 return;
             }
+
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
@@ -36,21 +40,26 @@ namespace Managers
                 levelUI.SetTimer(Time.timeSinceLevelLoad);
         }
 
+        public KeyValuePair<string, string> GetNameAndRoomCode()
+        {
+            return new KeyValuePair<string, string>(playerName, roomCode);
+        }
+
         public void SetNameAndRoomCode(string _playerName, string _roomCode)
         {
             playerName = _playerName;
             roomCode = _roomCode;
-            
-            teamScores = new Dictionary<int,int>
+
+            teamScores = new Dictionary<int, int>
             {
                 { 0, 0 },
                 { 1, 0 }
             };
         }
 
-        public KeyValuePair<string, string> GetNameAndRoomCode()
+        public void SetLevelUIInstance(LevelUI _levelUI)
         {
-            return new KeyValuePair<string,string>(playerName, roomCode);
+            levelUI = _levelUI;
         }
 
         public void OnPlayerDamage(int health)
@@ -83,10 +92,6 @@ namespace Managers
             teamScores[teamID] += points;
             if (levelUI != null)
                 levelUI.SetTeamScore(teamID, teamScores[teamID]);
-        }
-        public void SetLevelUIInstance(LevelUI _levelUI)
-        {
-            levelUI = _levelUI;
         }
     }
 }

@@ -23,8 +23,7 @@ namespace UI
 
         private void OnDestroy()
         {
-            if (PhotonNetworkManager.Instance != null)
-                PhotonNetworkManager.Instance.OnNetworkDisconnected -= ShowDisconnectPanel;
+            PhotonNetworkManager.Instance.OnNetworkDisconnected -= ShowDisconnectPanel;
         }
 
         private void ShowDisconnectPanel(DisconnectCause cause)
@@ -42,8 +41,8 @@ namespace UI
                     disconnectReasonText.text = $"Desconectado: {cause}";
                     break;
             }
+
             disconnectPanel.SetActive(true);
         }
     }
-
 }

@@ -8,18 +8,12 @@ namespace PLayerScripts
         [SerializeField] private MeshRenderer meshRenderer;
         [SerializeField] private BasePLayerStats data;
 
-
         private void Awake()
         {
             var inst = photonView.InstantiationData;
             if (inst != null && inst.Length > 0 && inst[0] is int idx)
             {
-                if (photonView.IsMine)
-                    photonView.RPC(
-                        nameof(RPC_SetTeamMaterial),
-                        RpcTarget.AllBuffered,
-                        idx
-                    );
+                if (photonView.IsMine) photonView.RPC(nameof(RPC_SetTeamMaterial), RpcTarget.AllBuffered, idx);
             }
         }
 
@@ -30,5 +24,4 @@ namespace PLayerScripts
             meshRenderer.material = data.TeamMaterials[teamIdx];
         }
     }
-
 }

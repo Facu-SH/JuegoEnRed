@@ -9,6 +9,7 @@ namespace PLayerScripts
     public class HealthController : MonoBehaviourPun, IDamageable
     {
         [SerializeField] private BasePLayerStats data;
+
         private TeamColor team;
         private int health;
 
@@ -33,11 +34,21 @@ namespace PLayerScripts
             }
         }
 
+        private void OnCollisionEnter(Collision other)
+        {
+            if (other.gameObject.layer == data.RespawnLayerIndex)
+            {
+                photonView.RPC(nameof(RPC_NotifyDeath), RpcTarget.All, (int)team);
+
+                photonView.RPC(nameof(RPC_Despawn), RpcTarget.All);
+            }
+        }
+
         public void GetDamage(int damage)
         {
             photonView.RPC(nameof(RPC_TakeDamage), RpcTarget.All, damage);
         }
-        
+
         [PunRPC]
         private void RPC_TakeDamage(int damage)
         {
@@ -60,22 +71,12 @@ namespace PLayerScripts
             bool iamdead = photonView.IsMine;
             MyPlayerManager.Instance.HandleDeath(gameObject, iamdead);
         }
-        
+
         [PunRPC]
         private void RPC_NotifyDeath(int deadTeamID)
         {
             if (!PhotonNetwork.IsMasterClient) return;
             GameManager.Instance.OnPlayerDeath(deadTeamID);
-        }
-
-        private void OnCollisionEnter(Collision other)
-        {
-            if (other.gameObject.layer == data.RespawnLayerIndex)
-            {
-                photonView.RPC(nameof(RPC_NotifyDeath), RpcTarget.All, (int)team);
-
-                photonView.RPC(nameof(RPC_Despawn), RpcTarget.All);
-            }
         }
     }
 }

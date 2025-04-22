@@ -8,18 +8,19 @@ namespace UI
 {
     public class LevelUI : MonoBehaviourPun
     {
-        [Header("Stats")]
-        [SerializeField] private TextMeshProUGUI timerText;
+        [Header("Stats")] [SerializeField] private TextMeshProUGUI timerText;
         [SerializeField] private TextMeshProUGUI healthText;
 
-        [Header("Team Scores")]
-        [SerializeField] private TextMeshProUGUI teamBlueScoreText;
+        [Header("Team Scores")] [SerializeField]
+        private TextMeshProUGUI teamBlueScoreText;
+
         [SerializeField] private TextMeshProUGUI teamRedScoreText;
-        [Header("Win/Lose")]
-        [SerializeField] private GameObject losePanel;
+
+        [Header("Win/Lose")] [SerializeField] private GameObject losePanel;
         [SerializeField] private GameObject winPanel;
-        
-        [SerializeField] private List<GameObject> UI;
+
+        [Header("Start UI Elements List")] [SerializeField]
+        private List<GameObject> UI;
 
         private void Awake()
         {
@@ -51,6 +52,14 @@ namespace UI
             }
         }
 
+        private void OnJoinedRoom()
+        {
+            foreach (GameObject _gameObject in UI)
+            {
+                _gameObject.SetActive(true);
+            }
+        }
+
         public void SetTimer(float timeInSeconds)
         {
             int minutes = Mathf.FloorToInt(timeInSeconds / 60f);
@@ -62,21 +71,13 @@ namespace UI
         {
             healthText.text = $"Health: {currentHealth}";
         }
-        
+
         public void SetTeamScore(int teamID, int score)
         {
             if (teamID == 1)
                 teamRedScoreText.text = $"Red Score: {score}";
             else
                 teamBlueScoreText.text = $"Blue score: {score}";
-        }
-
-        private void OnJoinedRoom()
-        {
-            foreach (GameObject _gameObject in UI)
-            {
-                _gameObject.SetActive(true);
-            }
         }
     }
 }

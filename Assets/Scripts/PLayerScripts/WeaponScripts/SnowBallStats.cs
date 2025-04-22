@@ -12,8 +12,10 @@ namespace PLayerScripts.WeaponScripts
         [SerializeField] private int playerLayerIndex;
         [SerializeField] private float knockbackForce;
         [SerializeField] private int damage;
+        
         [Header("Fire Rate")]
         [SerializeField] private float fireRate = 0.2f;
+        
         [Header("Particles")]
         [SerializeField] private GameObject iceParticlesPrefab;  
         

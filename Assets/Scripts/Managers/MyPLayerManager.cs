@@ -10,12 +10,13 @@ namespace Managers
     {
         public static MyPlayerManager Instance { get; private set; }
 
+        [SerializeField] private List<Transform> playerSpawnPoints;
+
         private Shooting playerShooting;
         private Movement playerMovement;
-
-        [SerializeField] private List<Transform> playerSpawnPoints;
         private GameObject deadMessage;
         private bool isEnd;
+
         public int Team { get; private set; }
 
         private void Awake()
@@ -25,10 +26,11 @@ namespace Managers
                 Destroy(gameObject);
                 return;
             }
+
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
-        
+
         public void SetPlayerShootingInstance(Shooting shooting)
         {
             isEnd = false;
@@ -41,6 +43,7 @@ namespace Managers
         {
             playerShooting.gameObject.transform.position = playerSpawnPoints[Team].position;
         }
+
         public void SetPlayerMovementInstance(Movement movement)
         {
             playerMovement = movement;
@@ -55,11 +58,11 @@ namespace Managers
         {
             this.deadMessage = deadMessage;
         }
-        
+
         public void TogglePlayerControls()
         {
             if (playerMovement != null) playerMovement.enabled = !playerMovement.enabled;
-            
+
             if (playerShooting != null) playerShooting.enabled = !playerShooting.enabled;
         }
 
@@ -70,20 +73,22 @@ namespace Managers
             playerShooting.enabled = false;
             playerShooting = null;
         }
+
         public void HandleDeath(GameObject playerGO, bool playerDead)
         {
             StartCoroutine(DeathAndRespawnRoutine(playerGO, playerDead));
         }
+
         private IEnumerator DeathAndRespawnRoutine(GameObject playerGO, bool playerDead)
         {
             playerGO.SetActive(false);
-            if(playerDead) deadMessage.SetActive(true);
-            
+            if (playerDead) deadMessage.SetActive(true);
+
             yield return new WaitForSeconds(10f);
-            
+
             playerGO.transform.position = playerSpawnPoints[Team].position;
-            
-            if(playerDead) deadMessage.SetActive(false);
+
+            if (playerDead) deadMessage.SetActive(false);
             playerGO.SetActive(true);
             if (isEnd)
             {
