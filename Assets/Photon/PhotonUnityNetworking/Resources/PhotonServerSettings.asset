@@ -46,6 +46,7 @@ MonoBehaviour:
   - RPC_NotifyDeath
   - RPC_Despawn
   - RPC_SetTeamMaterial
+  - RPC_ActiveEndCanvas
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

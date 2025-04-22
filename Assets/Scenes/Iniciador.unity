@@ -176,6 +176,10 @@ PrefabInstance:
       value: GameManager
       objectReference: {fileID: 0}
     - target: {fileID: 6044021313331581952, guid: 2b4df3e3d844d4e4982bbaa2d3cf996a, type: 3}
+      propertyPath: data
+      value: 
+      objectReference: {fileID: 11400000, guid: 300893eca669689489ed3c6750871c64, type: 2}
+    - target: {fileID: 6044021313331581952, guid: 2b4df3e3d844d4e4982bbaa2d3cf996a, type: 3}
       propertyPath: materials.Array.size
       value: 2
       objectReference: {fileID: 0}

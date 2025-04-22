@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Realtime;
 using TMPro;
-using UnityEngine.Serialization;
 
 namespace UI
 {
@@ -47,7 +46,6 @@ namespace UI
 
         private void HandleDisconnected(DisconnectCause cause)
         {
-            //joinButton.enabled = false;
             switch (cause)
             {
                 case DisconnectCause.ClientTimeout:

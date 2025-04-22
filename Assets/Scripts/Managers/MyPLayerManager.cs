@@ -17,6 +17,8 @@ namespace Managers
 
         [SerializeField] private List<Transform> playerSpawnPoints;
         private GameObject deadMessage;
+        private bool isEnd;
+        public int Team { get; private set; }
 
         private void Awake()
         {
@@ -31,17 +33,24 @@ namespace Managers
         
         public void SetPlayerShootingInstance(Shooting shooting)
         {
+            isEnd = false;
             playerShooting = shooting;
+            Team = (int)shooting.Team;
             SetColorAndTpPlayer();
         }
 
         private void SetColorAndTpPlayer()
         {
-            playerShooting.gameObject.transform.position = playerSpawnPoints[(int)playerShooting.Team].position;
+            playerShooting.gameObject.transform.position = playerSpawnPoints[Team].position;
         }
         public void SetPlayerMovementInstance(Movement movement)
         {
             playerMovement = movement;
+        }
+
+        public void SetEndedGame()
+        {
+            isEnd = true;
         }
 
         public void SetDeadMessageInstance(GameObject deadMessage)
@@ -51,9 +60,15 @@ namespace Managers
         
         public void TogglePlayerControls()
         {
-            if (playerShooting != null) playerMovement.enabled = !playerMovement.enabled;
+            if (playerMovement != null) playerMovement.enabled = !playerMovement.enabled;
             
             if (playerShooting != null) playerShooting.enabled = !playerShooting.enabled;
+        }
+
+        private void DeactivatePlayerControls()
+        {
+            playerMovement.enabled = false;
+            playerShooting.enabled = false;
         }
         public void HandleDeath(GameObject playerGO, bool playerDead)
         {
@@ -66,10 +81,14 @@ namespace Managers
             
             yield return new WaitForSeconds(10f);
             
-            playerGO.transform.position = playerSpawnPoints[(int)playerShooting.Team].position;
+            playerGO.transform.position = playerSpawnPoints[Team].position;
             
             if(playerDead) deadMessage.SetActive(false);
             playerGO.SetActive(true);
+            if (isEnd)
+            {
+                DeactivatePlayerControls();
+            }
         }
     }
 }

@@ -6,7 +6,7 @@ using TMPro;
 
 namespace UI
 {
-    public class GameUIController : MonoBehaviour
+    public class GameUIErrorHandler : MonoBehaviour
     {
         [SerializeField] private GameObject disconnectPanel;
         [SerializeField] private TextMeshProUGUI disconnectReasonText;

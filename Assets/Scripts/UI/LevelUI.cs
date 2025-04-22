@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Managers;
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
 
 namespace UI
 {
-    public class LevelUI : MonoBehaviourPunCallbacks
+    public class LevelUI : MonoBehaviourPun
     {
         [Header("Stats")]
         [SerializeField] private TextMeshProUGUI timerText;
@@ -14,13 +16,40 @@ namespace UI
         [Header("Team Scores")]
         [SerializeField] private TextMeshProUGUI teamBlueScoreText;
         [SerializeField] private TextMeshProUGUI teamRedScoreText;
+        [Header("Win/Lose")]
+        [SerializeField] private GameObject losePanel;
+        [SerializeField] private GameObject winPanel;
         
         [SerializeField] private List<GameObject> UI;
 
         private void Awake()
         {
             if (photonView.IsMine)
-                Managers.GameManager.Instance.SetLevelUIInstance(this);
+            {
+                GameManager.Instance.SetLevelUIInstance(this);
+                PhotonNetworkManager.Instance.OnJoinedRoomEvent += OnJoinedRoom;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (photonView.IsMine)
+            {
+                PhotonNetworkManager.Instance.OnJoinedRoomEvent -= OnJoinedRoom;
+            }
+        }
+
+        public void ActiveEndCanvas(int winnerTeam)
+        {
+            var myTeam = MyPlayerManager.Instance.Team;
+            if (myTeam == winnerTeam)
+            {
+                winPanel.SetActive(true);
+            }
+            else
+            {
+                losePanel.SetActive(true);
+            }
         }
 
         public void SetTimer(float timeInSeconds)
@@ -43,7 +72,7 @@ namespace UI
                 teamBlueScoreText.text = $"Blue score: {score}";
         }
 
-        public override void OnJoinedRoom()
+        private void OnJoinedRoom()
         {
             foreach (GameObject _gameObject in UI)
             {

@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Enums;
 using Photon.Pun;
 using UI;
 using UnityEngine;
@@ -8,9 +10,13 @@ namespace Managers
     public class GameManager : MonoBehaviourPun
     {
         public static GameManager Instance { get; private set; }
-        
+        [SerializeField] private LevelVariables data;
         private LevelUI levelUI;
-        private int[] teamScores = new int[2];
+        private Dictionary<int,int> teamScores = new Dictionary<int,int>
+        {
+            { 0, 0 },
+            { 1, 0 }
+        };
         private string playerName;
         private string roomCode;
 
@@ -23,11 +29,6 @@ namespace Managers
             }
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            
-            if (photonView.ViewID == 1)
-            {
-                photonView.ViewID = PhotonNetwork.AllocateViewID(true);
-            }
         }
 
         private void Update()
@@ -40,6 +41,12 @@ namespace Managers
         {
             this.playerName = playerName;
             this.roomCode = roomCode;
+            
+            teamScores = new Dictionary<int,int>
+            {
+                { 0, 0 },
+                { 1, 0 }
+            };
         }
 
         public KeyValuePair<string, string> GetNameAndRoomCode()
@@ -56,6 +63,19 @@ namespace Managers
         {
             int otherTeamID = deadTeamID == 0 ? 1 : 0;
             photonView.RPC(nameof(RPC_AddPoints), RpcTarget.AllBuffered, otherTeamID, 1);
+
+            var winnerTeamIndex = teamScores.FirstOrDefault(x => x.Value >= data.PointsToWin);
+            if (winnerTeamIndex.Value != 0)
+            {
+                photonView.RPC(nameof(RPC_ActiveEndCanvas), RpcTarget.AllBuffered, winnerTeamIndex.Key);
+            }
+        }
+
+        [PunRPC]
+        private void RPC_ActiveEndCanvas(int winnerTeamIndex)
+        {
+            levelUI.ActiveEndCanvas(winnerTeamIndex);
+            MyPlayerManager.Instance.SetEndedGame();
         }
 
         [PunRPC]
