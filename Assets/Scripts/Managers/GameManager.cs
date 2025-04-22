@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Enums;
 using Photon.Pun;
 using UI;
 using UnityEngine;
@@ -37,10 +36,10 @@ namespace Managers
                 levelUI.SetTimer(Time.timeSinceLevelLoad);
         }
 
-        public void SetNameAndRoomCode(string playerName, string roomCode)
+        public void SetNameAndRoomCode(string _playerName, string _roomCode)
         {
-            this.playerName = playerName;
-            this.roomCode = roomCode;
+            playerName = _playerName;
+            roomCode = _roomCode;
             
             teamScores = new Dictionary<int,int>
             {
@@ -85,9 +84,9 @@ namespace Managers
             if (levelUI != null)
                 levelUI.SetTeamScore(teamID, teamScores[teamID]);
         }
-        public void SetLevelUIInstance(LevelUI levelUI)
+        public void SetLevelUIInstance(LevelUI _levelUI)
         {
-            this.levelUI = levelUI;
+            levelUI = _levelUI;
         }
     }
 }

@@ -1,9 +1,7 @@
-﻿using System;
-using Enums;
+﻿using Enums;
 using Interfaces;
 using Managers;
 using Photon.Pun;
-using Photon.Pun.UtilityScripts;
 using UnityEngine;
 
 namespace PLayerScripts
@@ -16,8 +14,11 @@ namespace PLayerScripts
 
         private void OnEnable()
         {
-            health = data.MaxHealth;
-            GameManager.Instance.OnPlayerDamage(health);
+            if (photonView.IsMine)
+            {
+                health = data.MaxHealth;
+                GameManager.Instance.OnPlayerDamage(health);
+            }
         }
 
         private void Awake()
@@ -25,8 +26,11 @@ namespace PLayerScripts
             var inst = photonView.InstantiationData;
             if (inst != null && inst.Length > 0 && inst[0] is int idx)
                 team = (TeamColor)idx;
-            
-            GameManager.Instance.OnPlayerDamage(health);
+            if (photonView.IsMine)
+            {
+                health = data.MaxHealth;
+                GameManager.Instance.OnPlayerDamage(health);
+            }
         }
 
         public void GetDamage(int damage)

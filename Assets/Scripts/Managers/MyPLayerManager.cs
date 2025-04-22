@@ -1,10 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Enums;
 using PLayerScripts;
 using PLayerScripts.WeaponScripts;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Managers
 {

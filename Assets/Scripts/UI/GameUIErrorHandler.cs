@@ -1,6 +1,5 @@
 ﻿using Managers;
 using UnityEngine;
-using UnityEngine.UI;
 using Photon.Realtime;
 using TMPro;
 

@@ -18,6 +18,5 @@ namespace PLayerScripts
             nameTagComponent.SetName(playerName);
             Gun.SetActive(false);
         }
-        
     }
 }

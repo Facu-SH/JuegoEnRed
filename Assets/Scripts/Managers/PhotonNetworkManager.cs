@@ -1,7 +1,7 @@
 ﻿using System;
 using Photon.Pun;
 using Photon.Realtime;
-using UnityEngine;
+
 namespace Managers
 {
     public class PhotonNetworkManager : MonoBehaviourPunCallbacks
@@ -13,6 +13,7 @@ namespace Managers
     public event Action<DisconnectCause> OnNetworkDisconnected;
     public event Action<short, string> OnJoinRoomFailedHandler;
     public event Action OnJoinedRoomEvent;
+    public event Action OnLeftRoomEvent;
     
     private string pendingRoomName;
     private void Awake()
@@ -70,6 +71,12 @@ namespace Managers
     {
         base.OnJoinedRoom();
         OnJoinedRoomEvent?.Invoke();
+    }
+
+    public override void OnLeftRoom()
+    {
+        base.OnLeftRoom();
+        OnLeftRoomEvent?.Invoke();
     }
 }
 }

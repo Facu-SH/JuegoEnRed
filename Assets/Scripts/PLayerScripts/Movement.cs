@@ -34,8 +34,9 @@ namespace PLayerScripts
 
         void Start()
         {
-            if (photonView.IsMine)
-                MyPlayerManager.Instance.SetPlayerMovementInstance(this);
+            if (!photonView.IsMine) return;
+            
+            MyPlayerManager.Instance.SetPlayerMovementInstance(this);
             povComponent = virtualCamera.GetCinemachineComponent<CinemachinePOV>();
         }
         

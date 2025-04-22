@@ -22,8 +22,7 @@ namespace PLayerScripts.WeaponScripts
             if (inst != null && inst.Length > 0 && inst[0] is int idx)
                 team = (TeamColor)idx;
             
-            if (photonView.IsMine)
-                MyPlayerManager.Instance.SetPlayerShootingInstance(this);
+            if (photonView.IsMine) MyPlayerManager.Instance.SetPlayerShootingInstance(this);
         }
         
         void Update()

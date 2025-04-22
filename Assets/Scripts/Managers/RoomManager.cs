@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 namespace Managers
 {
-    public class RoomManager : MonoBehaviourPunCallbacks
+    public class RoomManager : MonoBehaviourPun
     {
         [SerializeField] private GameObject playerReference;
         [SerializeField] private Transform spawnPoint;
@@ -18,12 +18,18 @@ namespace Managers
         {
             var nameAndRoomCode = GameManager.Instance.GetNameAndRoomCode();
             playerName = nameAndRoomCode.Key;
+            PhotonNetworkManager.Instance.OnJoinedRoomEvent += OnJoinedRoom;
+            PhotonNetworkManager.Instance.OnLeftRoomEvent += OnLeftRoom;
         }
 
-        public override void OnJoinedRoom()
+        private void OnDestroy()
         {
-            base.OnJoinedRoom();
+            PhotonNetworkManager.Instance.OnJoinedRoomEvent -= OnJoinedRoom;
+            PhotonNetworkManager.Instance.OnLeftRoomEvent -= OnLeftRoom;
+        }
 
+        private void OnJoinedRoom()
+        {
             TeamColor myTeam = PhotonNetwork.LocalPlayer.ActorNumber % 2 == 0
                 ? TeamColor.Blue
                 : TeamColor.Red;
@@ -41,9 +47,8 @@ namespace Managers
             if (player.TryGetComponent<PlayerSetUp>(out var setup))
                 setup.StartUpLocalPlayer(playerName);
         }
-        public override void OnLeftRoom()
+        private void OnLeftRoom()
         {
-            base.OnLeftRoom();
             SceneManager.LoadScene(1);
         }
     }
