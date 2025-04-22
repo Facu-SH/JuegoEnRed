@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   snowballPrefab: {fileID: 1996533054942051382, guid: b8b160b393201ff40b81ed93de5a976b, type: 3}
   snowballSpeed: 15
-  velocityInfluence: 0.3
+  velocityInfluence: 1
   lifeTime: 5
   playerLayerIndex: 7
-  knockbackForce: 1
+  knockbackForce: 10
   damage: 10
   fireRate: 0.6
   iceParticlesPrefab: {fileID: 5112403345868107898, guid: 6f34ef0d986e9db4199cf75805f79753, type: 3}

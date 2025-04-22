@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   speed: 6
-  airControl: 0.5
+  airControl: 1
   maxVelocity: 10
   jumpForce: 5
   groundLayerIndex: 6
