@@ -62,6 +62,15 @@ namespace PLayerScripts
             if (!PhotonNetwork.IsMasterClient) return;
             GameManager.Instance.OnPlayerDeath(deadTeamID);
         }
-        
+
+        private void OnCollisionEnter(Collision other)
+        {
+            if (other.gameObject.layer == data.RespawnLayerIndex)
+            {
+                photonView.RPC(nameof(RPC_NotifyDeath), RpcTarget.All, (int)team);
+
+                photonView.RPC(nameof(RPC_Despawn), RpcTarget.All);
+            }
+        }
     }
 }

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: newBasePLayerStats
   m_EditorClassIdentifier: 
   maxHealth: 100
+  respawnLayerIndex: 9
   speed: 6
   airControl: 1
   maxVelocity: 10

@@ -11,6 +11,7 @@ namespace UI
         [SerializeField] private GameObject disconnectPanel;
         [SerializeField] private Button returnToMenuButton;
         [SerializeField] private TextMeshProUGUI disconnectReasonText;
+        [SerializeField] private GameObject deadMessage;
 
         private void Awake()
         {
@@ -21,6 +22,7 @@ namespace UI
         {
             returnToMenuButton.onClick.AddListener(() =>
                 UnityEngine.SceneManagement.SceneManager.LoadScene("Menu"));
+            MyPlayerManager.Instance.SetDeadMessageInstance(deadMessage);
         }
 
         private void OnDestroy()

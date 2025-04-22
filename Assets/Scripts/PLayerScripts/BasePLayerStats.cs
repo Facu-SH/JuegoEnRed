@@ -5,6 +5,7 @@ public class BasePLayerStats : ScriptableObject
 {
     [Header("Vida")]
     [SerializeField] private int maxHealth;
+    [SerializeField] private int respawnLayerIndex;
     [Header("Movimiento")]
     [Tooltip("Velocidad base")]
     [SerializeField] private float speed;
@@ -30,6 +31,7 @@ public class BasePLayerStats : ScriptableObject
     [SerializeField] private Material[] teamMaterials;
 
     public int MaxHealth => maxHealth;
+    public int RespawnLayerIndex => respawnLayerIndex;
     public float Speed => speed;
     public float JumpForce => jumpForce;
     public float AirControl => airControl;

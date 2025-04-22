@@ -18,8 +18,8 @@ namespace Managers
             ? playerShooting.Team
             : default;
 
-        public Shooting PlayerShooting => playerShooting;
         [SerializeField] private List<Transform> playerSpawnPoints;
+        private GameObject deadMessage;
 
         private void Awake()
         {
@@ -46,12 +46,17 @@ namespace Managers
         {
             playerMovement = movement;
         }
+
+        public void SetDeadMessageInstance(GameObject deadMessage)
+        {
+            this.deadMessage = deadMessage;
+        }
         
         public void TogglePlayerControls()
         {
-            playerMovement.enabled = !playerMovement.enabled;
-            if (playerShooting != null)
-                playerShooting.enabled = !playerShooting.enabled;
+            if (playerShooting != null) playerMovement.enabled = !playerMovement.enabled;
+            
+            if (playerShooting != null) playerShooting.enabled = !playerShooting.enabled;
         }
         public void HandleDeath(GameObject playerGO)
         {
@@ -60,11 +65,13 @@ namespace Managers
         private IEnumerator DeathAndRespawnRoutine(GameObject playerGO)
         {
             playerGO.SetActive(false);
+            deadMessage.SetActive(true);
             
             yield return new WaitForSeconds(10f);
             
             playerGO.transform.position = playerSpawnPoints[(int)Team].position;
             
+            deadMessage.SetActive(false);
             playerGO.SetActive(true);
         }
     }
