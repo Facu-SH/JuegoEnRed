@@ -1,6 +1,7 @@
 ﻿using Managers;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace UI
 {
@@ -30,6 +31,7 @@ namespace UI
         public void GoToMenu()
         {
             PhotonNetwork.LeaveRoom();
+            SceneManager.LoadScene(1);
         }
     }
 }

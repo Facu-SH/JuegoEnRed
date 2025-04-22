@@ -27,6 +27,8 @@ namespace Managers
 
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            
+            PhotonNetwork.NetworkingClient.StateChanged += OnClientStateChanged;
         }
 
         private void Start()
@@ -54,6 +56,16 @@ namespace Managers
             base.OnConnectedToMaster();
             IsConnectedToMasterServer = true;
             OnConnectedToMasterEvent?.Invoke();
+        }
+        private void OnClientStateChanged(ClientState from, ClientState to)
+        {
+            if (to == ClientState.Disconnecting || to == ClientState.Disconnected)
+            {
+                // Obtengo el DisconnectCause real desde el cliente:
+                var cause = PhotonNetwork.NetworkingClient.DisconnectedCause;
+                if (cause != DisconnectCause.DisconnectByClientLogic)
+                    OnNetworkDisconnected?.Invoke(cause);
+            }
         }
 
         public override void OnDisconnected(DisconnectCause cause)

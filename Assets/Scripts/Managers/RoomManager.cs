@@ -19,13 +19,11 @@ namespace Managers
             var nameAndRoomCode = GameManager.Instance.GetNameAndRoomCode();
             playerName = nameAndRoomCode.Key;
             PhotonNetworkManager.Instance.OnJoinedRoomEvent += OnJoinedRoom;
-            PhotonNetworkManager.Instance.OnLeftRoomEvent += OnLeftRoom;
         }
 
         private void OnDestroy()
         {
             PhotonNetworkManager.Instance.OnJoinedRoomEvent -= OnJoinedRoom;
-            PhotonNetworkManager.Instance.OnLeftRoomEvent -= OnLeftRoom;
         }
 
         private void OnJoinedRoom()
@@ -46,11 +44,6 @@ namespace Managers
 
             if (player.TryGetComponent<PlayerSetUp>(out var setup))
                 setup.StartUpLocalPlayer(playerName);
-        }
-
-        private void OnLeftRoom()
-        {
-            SceneManager.LoadScene(1);
         }
     }
 }

@@ -19,6 +19,7 @@ namespace PLayerScripts
         {
             if (!photonView.IsMine)
             {
+                if (cam == null) return;
                 Vector3 dir = transform.position - cam.transform.position;
                 dir.y = 0;
                 textMesh.transform.rotation = Quaternion.LookRotation(dir);

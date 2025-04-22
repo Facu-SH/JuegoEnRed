@@ -81,15 +81,15 @@ namespace Managers
 
         private IEnumerator DeathAndRespawnRoutine(GameObject playerGO, bool playerDead)
         {
-            playerGO.SetActive(false);
+            if(playerGO != null) playerGO.SetActive(false);
             if (playerDead) deadMessage.SetActive(true);
 
             yield return new WaitForSeconds(10f);
 
-            playerGO.transform.position = playerSpawnPoints[Team].position;
+            if(playerGO != null) playerGO.transform.position = playerSpawnPoints[Team].position;
 
             if (playerDead) deadMessage.SetActive(false);
-            playerGO.SetActive(true);
+            if(playerGO != null) playerGO.SetActive(true);
             if (isEnd)
             {
                 DeactivatePlayerControls();
