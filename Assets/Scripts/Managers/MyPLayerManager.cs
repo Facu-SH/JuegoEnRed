@@ -68,7 +68,9 @@ namespace Managers
         private void DeactivatePlayerControls()
         {
             playerMovement.enabled = false;
+            playerMovement = null;
             playerShooting.enabled = false;
+            playerShooting = null;
         }
         public void HandleDeath(GameObject playerGO, bool playerDead)
         {
