@@ -53,7 +53,8 @@ namespace PLayerScripts
         [PunRPC]
         private void RPC_Despawn()
         {
-            MyPlayerManager.Instance.HandleDeath(gameObject);
+            bool iamdead = photonView.IsMine;
+            MyPlayerManager.Instance.HandleDeath(gameObject, iamdead);
         }
         
         [PunRPC]

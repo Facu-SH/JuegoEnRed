@@ -14,9 +14,6 @@ namespace Managers
 
         private Shooting playerShooting;
         private Movement playerMovement;
-        public TeamColor Team => playerShooting != null
-            ? playerShooting.Team
-            : default;
 
         [SerializeField] private List<Transform> playerSpawnPoints;
         private GameObject deadMessage;
@@ -40,7 +37,7 @@ namespace Managers
 
         private void SetColorAndTpPlayer()
         {
-            playerShooting.gameObject.transform.position = playerSpawnPoints[(int)Team].position;
+            playerShooting.gameObject.transform.position = playerSpawnPoints[(int)playerShooting.Team].position;
         }
         public void SetPlayerMovementInstance(Movement movement)
         {
@@ -58,20 +55,20 @@ namespace Managers
             
             if (playerShooting != null) playerShooting.enabled = !playerShooting.enabled;
         }
-        public void HandleDeath(GameObject playerGO)
+        public void HandleDeath(GameObject playerGO, bool playerDead)
         {
-            StartCoroutine(DeathAndRespawnRoutine(playerGO));
+            StartCoroutine(DeathAndRespawnRoutine(playerGO, playerDead));
         }
-        private IEnumerator DeathAndRespawnRoutine(GameObject playerGO)
+        private IEnumerator DeathAndRespawnRoutine(GameObject playerGO, bool playerDead)
         {
             playerGO.SetActive(false);
-            deadMessage.SetActive(true);
+            if(playerDead) deadMessage.SetActive(true);
             
             yield return new WaitForSeconds(10f);
             
-            playerGO.transform.position = playerSpawnPoints[(int)Team].position;
+            playerGO.transform.position = playerSpawnPoints[(int)playerShooting.Team].position;
             
-            deadMessage.SetActive(false);
+            if(playerDead) deadMessage.SetActive(false);
             playerGO.SetActive(true);
         }
     }

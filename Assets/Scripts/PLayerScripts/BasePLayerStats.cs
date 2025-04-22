@@ -7,26 +7,20 @@ public class BasePLayerStats : ScriptableObject
     [SerializeField] private int maxHealth;
     [SerializeField] private int respawnLayerIndex;
     [Header("Movimiento")]
-    [Tooltip("Velocidad base")]
-    [SerializeField] private float speed;
+    [Tooltip("Velocidad base")] [SerializeField] private float speed;
     [SerializeField] private float airControl;
-    [Tooltip("Velocidad máxima")]
-    [SerializeField] private float maxVelocity;
-    //[SerializeField] private float mouseSensitivity;
-
+    [Tooltip("Velocidad máxima")] [SerializeField] private float maxVelocity;
+    
     [Header("Salto")]
     [SerializeField] private float jumpForce;
     [SerializeField] private int groundLayerIndex;
 
     [Header("Sprint")]
-    [Tooltip("Tiempo máximo de sprint (segundos)")]
-    [SerializeField] private float sprintDuration = 5f;
-    [Tooltip("Tiempo para recargar sprint desde 0 a full (segundos)")]
-    [SerializeField] private float sprintCooldown = 2.5f;
-    [Tooltip("Multiplicador de velocidad al sprintar")]
-    [SerializeField] private float sprintMultiplier = 1.5f;
-    [Tooltip("Minimo de Stamina para volver a usar el sprint una vez llega a 0")]
-    [SerializeField] private float minStaminaToSprint = 1f;
+    [Tooltip("Tiempo máximo de sprint (segundos)")] [SerializeField] private float sprintDuration = 5f;
+    [Tooltip("Tiempo para recargar sprint desde 0 a full (segundos)")] [SerializeField] private float sprintCooldown = 2.5f;
+    [Tooltip("Multiplicador de velocidad al sprintar")] [SerializeField] private float sprintMultiplier = 1.5f;
+    [Tooltip("Minimo de Stamina para volver a usar el sprint una vez llega a 0")] [SerializeField] private float minStaminaToSprint = 1f;
+    
     [Header("Materials")]
     [SerializeField] private Material[] teamMaterials;
 
@@ -36,9 +30,7 @@ public class BasePLayerStats : ScriptableObject
     public float JumpForce => jumpForce;
     public float AirControl => airControl;
     public float MaxVelocity => maxVelocity;
-    //public float MouseSensitivity => mouseSensitivity;
     public int GroundLayerIndex => groundLayerIndex;
-
     public float SprintDuration => sprintDuration;
     public float SprintCooldown => sprintCooldown;
     public float SprintMultiplier => sprintMultiplier;

@@ -1160,6 +1160,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1382048438}
   - {fileID: 7266334591632988135}
   - {fileID: 3212424531067315924}
   - {fileID: 2025081049}
@@ -1167,7 +1168,6 @@ RectTransform:
   - {fileID: 790033863}
   - {fileID: 223974227}
   - {fileID: 5998829522270099633}
-  - {fileID: 1382048438}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1232,7 +1232,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   disconnectPanel: {fileID: 3556906434137622165}
-  returnToMenuButton: {fileID: 8049114714129364196}
   disconnectReasonText: {fileID: 284504943}
   deadMessage: {fileID: 1382048435}
 --- !u!1 &1624928238

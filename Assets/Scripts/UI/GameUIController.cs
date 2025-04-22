@@ -9,7 +9,6 @@ namespace UI
     public class GameUIController : MonoBehaviour
     {
         [SerializeField] private GameObject disconnectPanel;
-        [SerializeField] private Button returnToMenuButton;
         [SerializeField] private TextMeshProUGUI disconnectReasonText;
         [SerializeField] private GameObject deadMessage;
 
@@ -20,8 +19,6 @@ namespace UI
 
         private void Start()
         {
-            returnToMenuButton.onClick.AddListener(() =>
-                UnityEngine.SceneManagement.SceneManager.LoadScene("Menu"));
             MyPlayerManager.Instance.SetDeadMessageInstance(deadMessage);
         }
 
@@ -37,7 +34,7 @@ namespace UI
             {
                 case DisconnectCause.ClientTimeout:
                 case DisconnectCause.ServerTimeout:
-                    disconnectReasonText.text = "La conexión tardó demasiado.";
+                    disconnectReasonText.text = "Error: La conexión tardó demasiado. (Timeout)";
                     break;
                 case DisconnectCause.ExceptionOnConnect:
                     disconnectReasonText.text = "Error al conectar con el Master Server.";

@@ -30,7 +30,6 @@ namespace Managers
     {
         if (!PhotonNetwork.IsConnected)
         {
-            Debug.Log("Photon: ConnectUsingSettings");
             PhotonNetwork.ConnectUsingSettings();
         }
     }
@@ -39,23 +38,17 @@ namespace Managers
     {
         if (PhotonNetwork.NetworkClientState == ClientState.ConnectedToMaster)
         {
-            Debug.Log($"Photon: JoinOrCreateRoom({roomName})");
             PhotonNetwork.JoinOrCreateRoom(
                 roomName,
-                new RoomOptions { MaxPlayers = 8 },
+                new RoomOptions { MaxPlayers = 4 },
                 TypedLobby.Default
             );
-        }
-        else
-        {
-            Debug.LogWarning("Photon: JoinRoom llamado pero no conectado; espera a OnConnectedToMasterEvent.");
         }
     }
 
     public override void OnConnectedToMaster()
     {
         base.OnConnectedToMaster();
-        Debug.Log("Photon: Connected to Master");
         IsConnectedToMasterServer = true;
         OnConnectedToMasterEvent?.Invoke();
     }
@@ -64,21 +57,18 @@ namespace Managers
         base.OnDisconnected(cause);
         IsConnectedToMasterServer = false;
         if (cause == DisconnectCause.DisconnectByClientLogic) return;
-        Debug.LogError($"Photon: Disconnected: {cause}");
         OnNetworkDisconnected?.Invoke(cause);
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
         base.OnJoinRoomFailed(returnCode, message);
-        Debug.LogError($"Photon: JoinRoomFailed ({returnCode}): {message}");
         OnJoinRoomFailedHandler?.Invoke(returnCode, message);
     }
 
     public override void OnJoinedRoom()
     {
         base.OnJoinedRoom();
-        Debug.Log("Photon: Joined Room");
         OnJoinedRoomEvent?.Invoke();
     }
 }

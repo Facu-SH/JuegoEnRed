@@ -12,20 +12,17 @@ namespace Managers
         [SerializeField] private Transform spawnPoint;
 
         private string playerName;
-        private string roomCode;
         private PhotonNetworkManager net;
 
         private void Start()
         {
             var nameAndRoomCode = GameManager.Instance.GetNameAndRoomCode();
             playerName = nameAndRoomCode.Key;
-            roomCode   = nameAndRoomCode.Value;
         }
 
         public override void OnJoinedRoom()
         {
             base.OnJoinedRoom();
-            Debug.Log("RoomManager: ¡Sala unida! Instanciando jugador…");
 
             TeamColor myTeam = PhotonNetwork.LocalPlayer.ActorNumber % 2 == 0
                 ? TeamColor.Blue
@@ -47,7 +44,6 @@ namespace Managers
         public override void OnLeftRoom()
         {
             base.OnLeftRoom();
-            Debug.Log("RoomManager: Sala abandonada, volviendo al menú...");
             SceneManager.LoadScene(1);
         }
     }
