@@ -1,22 +1,103 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using GameManager = Managers.GameManager;
+using UnityEngine.UI;
+using Photon.Realtime;
+using Managers;
 
 namespace UI
 {
     public class Menu : MonoBehaviour
     {
+        [Header("Panels")]
         [SerializeField] private GameObject changeNameMenu;
         [SerializeField] private GameObject settingsMenu;
-        [SerializeField] private TextMeshProUGUI playerName;
-        [SerializeField] private TextMeshProUGUI roomCode;
+
+        [Header("Displays")]
+        [SerializeField] private TextMeshProUGUI playerNameDisplay;
+        [SerializeField] private TextMeshProUGUI roomCodeDisplay;
+
+        [Header("Inputs")]
         [SerializeField] private TMP_InputField playerNameInput;
         [SerializeField] private TMP_InputField roomCodeInput;
-        public void GoToGameScene()
+
+        [Header("Buttons")]
+        [SerializeField] private Button joinButton;
+        [SerializeField] private Button exitButton;
+
+        [Header("Feedback")]
+        [SerializeField] private TextMeshProUGUI feedbackText;
+
+        private void Awake()
         {
-            GameManager.Instance.SetNameAndRoomCode(playerNameInput.text, roomCodeInput.text);
-            SceneManager.LoadScene(2);
+            joinButton.interactable = false;
+            feedbackText.text = "";
+            
+            var net = PhotonNetworkManager.Instance;
+            net.OnConnectedToMasterEvent += OnConnectedToMaster;
+            net.OnJoinRoomFailedHandler += OnJoinRoomFailed;
+            net.OnNetworkDisconnected += OnNetworkDisconnected;
+            net.OnJoinedRoomEvent += OnJoinedRoom;
+            
+            joinButton.onClick.AddListener(OnJoinClicked);
+            exitButton.onClick.AddListener(Application.Quit);
+
+            if (net.IsConnectedToMasterServer)
+            {
+                OnConnectedToMaster();
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (PhotonNetworkManager.Instance != null)
+            {
+                var net = PhotonNetworkManager.Instance;
+                net.OnConnectedToMasterEvent -= OnConnectedToMaster;
+                net.OnJoinRoomFailedHandler -= OnJoinRoomFailed;
+                net.OnNetworkDisconnected -= OnNetworkDisconnected;
+                net.OnJoinedRoomEvent -= OnJoinedRoom;
+            }
+
+            joinButton.onClick.RemoveListener(OnJoinClicked);
+            exitButton.onClick.RemoveListener(Application.Quit);
+        }
+
+        private void OnConnectedToMaster()
+        {
+            joinButton.interactable = true;
+            feedbackText.text = "Conectado a Photon";
+        }
+
+        private void OnJoinRoomFailed(short returnCode, string message)
+        {
+            feedbackText.text = $"Error al unirse: {message} ({returnCode})";
+        }
+
+        private void OnNetworkDisconnected(DisconnectCause cause)
+        {
+            feedbackText.text = $"Desconectado: {cause}";
+            joinButton.interactable = false;
+        }
+
+        public void OnJoinedRoom()
+        {
+            SceneManager.LoadScene("MainScene");
+        }
+
+        private void OnJoinClicked()
+        {
+            feedbackText.text = "Intentando unirse...";
+            playerNameDisplay.text = playerNameInput.text;
+            roomCodeDisplay.text    = roomCodeInput.text;
+            
+            GameManager.Instance.SetNameAndRoomCode(
+                playerNameInput.text, 
+                roomCodeInput.text
+            );
+            
+            PhotonNetworkManager.Instance.JoinRoom(roomCodeInput.text);
         }
 
         public void OpenChangeNameMenu()
@@ -28,6 +109,7 @@ namespace UI
         {
             changeNameMenu.SetActive(false);
         }
+
         public void OpenSettingsMenu()
         {
             settingsMenu.SetActive(true);
@@ -37,24 +119,21 @@ namespace UI
         {
             settingsMenu.SetActive(false);
         }
+
         public void ChangePlayerName()
         {
-            playerName.text = playerNameInput.text;
-            
-        }
-        public void ChangeRoomCode()
-        {
-            roomCode.text = roomCodeInput.text;
+            playerNameDisplay.text = playerNameInput.text;
         }
 
-        public void ExitGame()
+        public void ChangeRoomCode()
         {
-            Application.Quit();
+            roomCodeDisplay.text = roomCodeInput.text;
         }
 
         public void GoToMenu()
         {
-            SceneManager.LoadScene(0);
+            SceneManager.LoadScene(1);
         }
+        
     }
 }

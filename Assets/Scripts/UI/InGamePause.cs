@@ -9,8 +9,6 @@ namespace UI
     public class InGamePause : MonoBehaviour
     {
         [SerializeField] private GameObject pauseMenu;
-        private Movement playerMovement;
-
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Escape))
@@ -25,9 +23,7 @@ namespace UI
         
         public void GoToMenu()
         {
-            SceneManager.LoadScene(1);
             PhotonNetwork.LeaveRoom();
-            PhotonNetwork.Disconnect();
         }
         private void ClosePauseAndResumeMovement()
         {
