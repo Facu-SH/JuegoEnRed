@@ -1,4 +1,3 @@
-// Guarda esto en Assets/Editor/FindMissingScripts.cs
 using UnityEngine;
 using UnityEditor;
 

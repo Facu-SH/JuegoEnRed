@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using UI;
 using UnityEngine;
@@ -15,6 +17,7 @@ namespace Managers
         private LevelUI levelUI;
         private string playerName;
         private string roomCode;
+        private double startTime = 0;
 
         private Dictionary<int, int> teamScores = new Dictionary<int, int>
         {
@@ -32,12 +35,46 @@ namespace Managers
 
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            PhotonNetworkManager.Instance.OnJoinedRoomEvent += OnJoinedRoom;
+            PhotonNetworkManager.Instance.OnRoomPropertiesUpdateEvent += OnRoomPropertiesUpdate;
+        }
+
+        private void OnDestroy()
+        {
+            PhotonNetworkManager.Instance.OnJoinedRoomEvent -= OnJoinedRoom;
+            PhotonNetworkManager.Instance.OnRoomPropertiesUpdateEvent -= OnRoomPropertiesUpdate;
+
         }
 
         private void Update()
         {
-            if (levelUI != null)
-                levelUI.SetTimer(Time.timeSinceLevelLoad);
+            if (levelUI != null && startTime > 0)
+            {
+                float elapsed = (float)(PhotonNetwork.Time - startTime);
+                levelUI.SetTimer(elapsed);
+            }
+        }
+
+        private void OnJoinedRoom()
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                double t0 = PhotonNetwork.Time;
+                var props = new Hashtable { { "StartTime", t0 } };
+                PhotonNetwork.CurrentRoom.SetCustomProperties(props);
+                startTime = t0;
+            }
+            else
+            {
+                if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("StartTime", out object ts))
+                    startTime = (double)ts;
+            }
+        }
+        
+        private void OnRoomPropertiesUpdate(Hashtable propsThatChanged)
+        {
+            if (propsThatChanged.TryGetValue("StartTime", out object ts))
+                startTime = (double)ts;
         }
 
         public KeyValuePair<string, string> GetNameAndRoomCode()

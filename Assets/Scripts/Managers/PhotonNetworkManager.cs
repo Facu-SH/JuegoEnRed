@@ -1,4 +1,5 @@
 ﻿using System;
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 
@@ -14,6 +15,7 @@ namespace Managers
         public event Action<DisconnectCause> OnNetworkDisconnected;
         public event Action<short, string> OnJoinRoomFailedHandler;
         public event Action OnJoinedRoomEvent;
+        public event Action<Hashtable> OnRoomPropertiesUpdateEvent;
 
         private void Awake()
         {
@@ -83,6 +85,11 @@ namespace Managers
         {
             base.OnJoinedRoom();
             OnJoinedRoomEvent?.Invoke();
+        }
+        public override void OnRoomPropertiesUpdate(Hashtable propsThatChanged)
+        {
+            base.OnRoomPropertiesUpdate(propsThatChanged);
+            OnRoomPropertiesUpdateEvent?.Invoke(propsThatChanged);
         }
     }
 }
