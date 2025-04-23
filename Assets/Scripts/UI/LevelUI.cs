@@ -12,9 +12,8 @@ namespace UI
         [Header("Stats")] [SerializeField] private TextMeshProUGUI timerText;
         [SerializeField] private TextMeshProUGUI healthText;
 
-        [Header("Team Scores")] [SerializeField]
-        private TextMeshProUGUI teamBlueScoreText;
-
+        [Header("Team Scores")] 
+        [SerializeField] private TextMeshProUGUI teamBlueScoreText;
         [SerializeField] private TextMeshProUGUI teamRedScoreText;
 
         [Header("Win/Lose")] [SerializeField] private GameObject losePanel;
