@@ -69,6 +69,8 @@ namespace UI
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
+            if (!photonView.IsMine) return;
+            
             foreach (GameObject _gameObject in UI)
             {
                 _gameObject.SetActive(true);
