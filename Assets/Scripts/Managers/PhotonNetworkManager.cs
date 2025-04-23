@@ -7,13 +7,13 @@ namespace Managers
     public class PhotonNetworkManager : MonoBehaviourPunCallbacks
     {
         public static PhotonNetworkManager Instance { get; private set; }
+        
         public bool IsConnectedToMasterServer { get; private set; }
-
+        
         public event Action OnConnectedToMasterEvent;
         public event Action<DisconnectCause> OnNetworkDisconnected;
         public event Action<short, string> OnJoinRoomFailedHandler;
         public event Action OnJoinedRoomEvent;
-        public event Action OnLeftRoomEvent;
 
         private string pendingRoomName;
 
@@ -61,7 +61,6 @@ namespace Managers
         {
             if (to == ClientState.Disconnecting || to == ClientState.Disconnected)
             {
-                // Obtengo el DisconnectCause real desde el cliente:
                 var cause = PhotonNetwork.NetworkingClient.DisconnectedCause;
                 if (cause != DisconnectCause.DisconnectByClientLogic)
                     OnNetworkDisconnected?.Invoke(cause);
@@ -86,12 +85,6 @@ namespace Managers
         {
             base.OnJoinedRoom();
             OnJoinedRoomEvent?.Invoke();
-        }
-
-        public override void OnLeftRoom()
-        {
-            base.OnLeftRoom();
-            OnLeftRoomEvent?.Invoke();
         }
     }
 }

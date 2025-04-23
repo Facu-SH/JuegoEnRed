@@ -33,7 +33,6 @@ namespace UI
             PhotonNetworkManager.Instance.OnNetworkDisconnected += OnNetworkDisconnected;
             PhotonNetworkManager.Instance.OnJoinedRoomEvent += OnJoinedRoom;
 
-            joinButton.onClick.AddListener(OnJoinClicked);
             exitButton.onClick.AddListener(Application.Quit);
 
             if (PhotonNetworkManager.Instance.IsConnectedToMasterServer)
@@ -49,7 +48,6 @@ namespace UI
             PhotonNetworkManager.Instance.OnNetworkDisconnected -= OnNetworkDisconnected;
             PhotonNetworkManager.Instance.OnJoinedRoomEvent -= OnJoinedRoom;
 
-            joinButton.onClick.RemoveListener(OnJoinClicked);
             exitButton.onClick.RemoveListener(Application.Quit);
         }
 
@@ -70,7 +68,7 @@ namespace UI
             joinButton.interactable = false;
         }
 
-        private void OnJoinClicked()
+        public void OnJoinClicked()
         {
             feedbackText.text = "Intentando unirse...";
             playerNameDisplay.text = playerNameInput.text;

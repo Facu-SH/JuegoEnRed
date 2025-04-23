@@ -16,8 +16,6 @@ namespace UI
 
         private void Awake()
         {
-            joinButton.onClick.AddListener(OnJoinClicked);
-
             PhotonNetworkManager.Instance.OnJoinRoomFailedHandler += HandleJoinRoomFailed;
             PhotonNetworkManager.Instance.OnNetworkDisconnected += HandleDisconnected;
         }
@@ -26,16 +24,8 @@ namespace UI
         {
             PhotonNetworkManager.Instance.OnJoinRoomFailedHandler -= HandleJoinRoomFailed;
             PhotonNetworkManager.Instance.OnNetworkDisconnected -= HandleDisconnected;
-
-            joinButton.onClick.RemoveListener(OnJoinClicked);
         }
-
-        private void OnJoinClicked()
-        {
-            feedbackText.text = "Intentando unirse...";
-            PhotonNetworkManager.Instance.JoinRoom(roomInputField.text);
-        }
-
+        
         private void HandleJoinRoomFailed(short code, string message)
         {
             errorText.text = $"Error al unirse: {message} ({code})";
