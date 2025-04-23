@@ -25,6 +25,7 @@ namespace UI
         private void OnDestroy()
         {
             PhotonNetworkManager.Instance.OnNetworkDisconnected -= ShowDisconnectPanel;
+            PhotonNetworkManager.Instance.OnJoinRoomFailedHandler -= ShowDisconnectPanel;
         }
 
         private void ShowDisconnectPanel(DisconnectCause cause)
