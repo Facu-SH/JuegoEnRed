@@ -15,8 +15,6 @@ namespace Managers
         public event Action<short, string> OnJoinRoomFailedHandler;
         public event Action OnJoinedRoomEvent;
 
-        private string pendingRoomName;
-
         private void Awake()
         {
             if (Instance != null && Instance != this)

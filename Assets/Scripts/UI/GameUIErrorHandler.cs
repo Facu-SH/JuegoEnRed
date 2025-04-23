@@ -14,6 +14,7 @@ namespace UI
         private void Awake()
         {
             PhotonNetworkManager.Instance.OnNetworkDisconnected += ShowDisconnectPanel;
+            PhotonNetworkManager.Instance.OnJoinRoomFailedHandler += ShowDisconnectPanel;
         }
 
         private void Start()
@@ -42,6 +43,12 @@ namespace UI
                     break;
             }
 
+            disconnectPanel.SetActive(true);
+        }
+
+        private void ShowDisconnectPanel(short returnCode, string message)
+        {
+            disconnectReasonText.text = $"Desconectado: {message}";
             disconnectPanel.SetActive(true);
         }
     }

@@ -31,7 +31,6 @@ namespace UI
             PhotonNetworkManager.Instance.OnConnectedToMasterEvent += OnConnectedToMaster;
             PhotonNetworkManager.Instance.OnJoinRoomFailedHandler += OnJoinRoomFailed;
             PhotonNetworkManager.Instance.OnNetworkDisconnected += OnNetworkDisconnected;
-            PhotonNetworkManager.Instance.OnJoinedRoomEvent += OnJoinedRoom;
 
             exitButton.onClick.AddListener(Application.Quit);
 
@@ -46,7 +45,6 @@ namespace UI
             PhotonNetworkManager.Instance.OnConnectedToMasterEvent -= OnConnectedToMaster;
             PhotonNetworkManager.Instance.OnJoinRoomFailedHandler -= OnJoinRoomFailed;
             PhotonNetworkManager.Instance.OnNetworkDisconnected -= OnNetworkDisconnected;
-            PhotonNetworkManager.Instance.OnJoinedRoomEvent -= OnJoinedRoom;
 
             exitButton.onClick.RemoveListener(Application.Quit);
         }
@@ -78,13 +76,8 @@ namespace UI
                 playerNameInput.text,
                 roomCodeInput.text
             );
-
-            PhotonNetworkManager.Instance.JoinRoom(roomCodeInput.text);
-        }
-
-        private void OnJoinedRoom()
-        {
             SceneManager.LoadScene("MainScene");
+            PhotonNetworkManager.Instance.JoinRoom(roomCodeInput.text);
         }
 
         public void OpenChangeNameMenu()

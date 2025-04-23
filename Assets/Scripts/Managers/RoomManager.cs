@@ -18,15 +18,15 @@ namespace Managers
         {
             var nameAndRoomCode = GameManager.Instance.GetNameAndRoomCode();
             playerName = nameAndRoomCode.Key;
-            SceneManager.sceneLoaded += OnSceneLoaded;
+            PhotonNetworkManager.Instance.OnJoinedRoomEvent += SpawnPlayer;
         }
 
         private void OnDestroy()
         {
-            SceneManager.sceneLoaded -= OnSceneLoaded;
+            PhotonNetworkManager.Instance.OnJoinedRoomEvent -= SpawnPlayer;
         }
 
-        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        private void SpawnPlayer()
         {
             TeamColor myTeam = PhotonNetwork.LocalPlayer.ActorNumber % 2 == 0
                 ? TeamColor.Blue
