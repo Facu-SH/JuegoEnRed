@@ -1673,10 +1673,10 @@ RectTransform:
   - {fileID: 1248787871}
   - {fileID: 790033863}
   - {fileID: 223974227}
+  - {fileID: 945421783}
   - {fileID: 1063994465}
   - {fileID: 1989359205}
   - {fileID: 796284476}
-  - {fileID: 945421783}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1698,6 +1698,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timerText: {fileID: 2052447779}
   healthText: {fileID: 1535570206}
+  myTeamText: {fileID: 587358944}
   teamBlueScoreText: {fileID: 2098040478}
   teamRedScoreText: {fileID: 1828601338}
   losePanel: {fileID: 1989359202}
@@ -1707,6 +1708,7 @@ MonoBehaviour:
   - {fileID: 1248787870}
   - {fileID: 790033862}
   - {fileID: 223974226}
+  - {fileID: 945421782}
 --- !u!114 &1568847928
 MonoBehaviour:
   m_ObjectHideFlags: 0

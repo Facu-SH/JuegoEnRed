@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Enums;
 using Managers;
 using Photon.Pun;
 using TMPro;
@@ -12,6 +14,7 @@ namespace UI
         [Header("Stats")] 
         [SerializeField] private TextMeshProUGUI timerText;
         [SerializeField] private TextMeshProUGUI healthText;
+        [SerializeField] private TextMeshProUGUI myTeamText;
 
         [Header("Team Scores")] 
         [SerializeField] private TextMeshProUGUI teamBlueScoreText;
@@ -30,6 +33,17 @@ namespace UI
                 GameManager.Instance.SetLevelUIInstance(this);
                 SceneManager.sceneLoaded += OnSceneLoaded;
             }
+        }
+
+        private void Start()
+        {
+            if (MyPlayerManager.Instance.Team == 0)
+            {
+                myTeamText.text = $"Team Red";
+                myTeamText.color = Color.red;
+            }
+            else
+                myTeamText.text = $"Team Blue";
         }
 
         private void OnDestroy()

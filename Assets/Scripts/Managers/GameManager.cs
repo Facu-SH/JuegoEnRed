@@ -36,6 +36,10 @@ namespace Managers
 
             Instance = this;
             DontDestroyOnLoad(gameObject);
+        }
+
+        private void Start()
+        {
             PhotonNetworkManager.Instance.OnJoinedRoomEvent += OnJoinedRoom;
             PhotonNetworkManager.Instance.OnRoomPropertiesUpdateEvent += OnRoomPropertiesUpdate;
         }
