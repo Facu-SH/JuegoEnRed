@@ -3,6 +3,7 @@ using Managers;
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace UI
 {
@@ -27,7 +28,7 @@ namespace UI
             if (photonView.IsMine)
             {
                 GameManager.Instance.SetLevelUIInstance(this);
-                PhotonNetworkManager.Instance.OnJoinedRoomEvent += OnJoinedRoom;
+                SceneManager.sceneLoaded += OnSceneLoaded;
             }
         }
 
@@ -35,7 +36,7 @@ namespace UI
         {
             if (photonView.IsMine)
             {
-                PhotonNetworkManager.Instance.OnJoinedRoomEvent -= OnJoinedRoom;
+                SceneManager.sceneLoaded -= OnSceneLoaded;
             }
         }
 
@@ -52,7 +53,7 @@ namespace UI
             }
         }
 
-        private void OnJoinedRoom()
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             foreach (GameObject _gameObject in UI)
             {

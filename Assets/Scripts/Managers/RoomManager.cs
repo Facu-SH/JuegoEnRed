@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 namespace Managers
 {
-    public class RoomManager : MonoBehaviourPun
+    public class RoomManager : MonoBehaviour
     {
         [SerializeField] private GameObject playerReference;
         [SerializeField] private Transform spawnPoint;
@@ -14,19 +14,19 @@ namespace Managers
         private string playerName;
         private PhotonNetworkManager net;
 
-        private void Start()
+        private void Awake()
         {
             var nameAndRoomCode = GameManager.Instance.GetNameAndRoomCode();
             playerName = nameAndRoomCode.Key;
-            PhotonNetworkManager.Instance.OnJoinedRoomEvent += OnJoinedRoom;
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
         private void OnDestroy()
         {
-            PhotonNetworkManager.Instance.OnJoinedRoomEvent -= OnJoinedRoom;
+            SceneManager.sceneLoaded -= OnSceneLoaded;
         }
 
-        private void OnJoinedRoom()
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             TeamColor myTeam = PhotonNetwork.LocalPlayer.ActorNumber % 2 == 0
                 ? TeamColor.Blue

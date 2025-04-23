@@ -82,7 +82,7 @@ namespace UI
             PhotonNetworkManager.Instance.JoinRoom(roomCodeInput.text);
         }
 
-        public void OnJoinedRoom()
+        private void OnJoinedRoom()
         {
             SceneManager.LoadScene("MainScene");
         }
