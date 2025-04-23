@@ -31,12 +31,18 @@ namespace UI
             if (photonView.IsMine)
             {
                 GameManager.Instance.SetLevelUIInstance(this);
-                SceneManager.sceneLoaded += OnSceneLoaded;
             }
         }
 
         private void Start()
         {
+            if (!photonView.IsMine) return;
+            
+            foreach (GameObject _gameObject in UI)
+            {
+                _gameObject.SetActive(true);
+            }
+            
             if (MyPlayerManager.Instance.Team == 0)
             {
                 myTeamText.text = $"Team Red";
@@ -44,14 +50,6 @@ namespace UI
             }
             else
                 myTeamText.text = $"Team Blue";
-        }
-
-        private void OnDestroy()
-        {
-            if (photonView.IsMine)
-            {
-                SceneManager.sceneLoaded -= OnSceneLoaded;
-            }
         }
 
         public void ActiveEndCanvas(int winnerTeam)
@@ -64,16 +62,6 @@ namespace UI
             else
             {
                 losePanel.SetActive(true);
-            }
-        }
-
-        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-        {
-            if (!photonView.IsMine) return;
-            
-            foreach (GameObject _gameObject in UI)
-            {
-                _gameObject.SetActive(true);
             }
         }
 
