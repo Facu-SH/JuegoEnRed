@@ -576,6 +576,10 @@ PrefabInstance:
       value: MyPLayerManager
       objectReference: {fileID: 0}
     - target: {fileID: 4768089524264505495, guid: c6a56a867620092479bd107d5b221a7e, type: 3}
+      propertyPath: data
+      value: 
+      objectReference: {fileID: 11400000, guid: 300893eca669689489ed3c6750871c64, type: 2}
+    - target: {fileID: 4768089524264505495, guid: c6a56a867620092479bd107d5b221a7e, type: 3}
       propertyPath: materials.Array.size
       value: 2
       objectReference: {fileID: 0}

@@ -11,6 +11,7 @@ namespace Managers
         public static MyPlayerManager Instance { get; private set; }
 
         [SerializeField] private List<Transform> playerSpawnPoints;
+        [SerializeField] private LevelVariables data;
 
         private Shooting playerShooting;
         private Movement playerMovement;
@@ -51,6 +52,7 @@ namespace Managers
 
         public void SetEndedGame()
         {
+            DeactivatePlayerControls();
             isEnd = true;
         }
 
@@ -68,9 +70,10 @@ namespace Managers
 
         private void DeactivatePlayerControls()
         {
-            playerMovement.enabled = false;
+            if (playerMovement != null) playerMovement.enabled = false;
             playerMovement = null;
-            playerShooting.enabled = false;
+            
+            if (playerShooting != null) playerShooting.enabled = false;
             playerShooting = null;
         }
 
@@ -84,7 +87,7 @@ namespace Managers
             if(playerGO != null) playerGO.SetActive(false);
             if (playerDead) deadMessage.SetActive(true);
 
-            yield return new WaitForSeconds(10f);
+            yield return new WaitForSeconds(data.TimeToRespawn);
 
             if(playerGO != null) playerGO.transform.position = playerSpawnPoints[Team].position;
 

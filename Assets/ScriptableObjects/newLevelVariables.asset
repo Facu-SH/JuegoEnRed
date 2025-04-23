@@ -13,3 +13,5 @@ MonoBehaviour:
   m_Name: newLevelVariables
   m_EditorClassIdentifier: 
   pointsToWin: 5
+  timeToRespawn: 3
+  timeToEndLevel: 10

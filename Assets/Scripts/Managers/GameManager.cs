@@ -18,6 +18,7 @@ namespace Managers
         private string playerName;
         private string roomCode;
         private double startTime = 0;
+        private bool isEnd;
 
         private Dictionary<int, int> teamScores = new Dictionary<int, int>
         {
@@ -48,10 +49,14 @@ namespace Managers
 
         private void Update()
         {
-            if (levelUI != null && startTime > 0)
+            if (!isEnd && levelUI != null && startTime > 0)
             {
                 float elapsed = (float)(PhotonNetwork.Time - startTime);
                 levelUI.SetTimer(elapsed);
+                if (PhotonNetwork.IsMasterClient && elapsed >= data.TimeToEndLevel)
+                {
+                    TryEndGame(true);
+                }
             }
         }
 
@@ -86,7 +91,8 @@ namespace Managers
         {
             playerName = _playerName;
             roomCode = _roomCode;
-
+            isEnd = false;
+            
             teamScores = new Dictionary<int, int>
             {
                 { 0, 0 },
@@ -109,16 +115,30 @@ namespace Managers
             int otherTeamID = deadTeamID == 0 ? 1 : 0;
             photonView.RPC(nameof(RPC_AddPoints), RpcTarget.AllBuffered, otherTeamID, 1);
 
-            var winnerTeamIndex = teamScores.FirstOrDefault(x => x.Value >= data.PointsToWin);
-            if (winnerTeamIndex.Value != 0)
+            TryEndGame(false);
+        }
+
+        private void TryEndGame(bool isTimeToEnd)
+        {
+            if (isTimeToEnd)
             {
+                var winnerTeamIndex = teamScores.OrderByDescending(kv => kv.Value).First();
                 photonView.RPC(nameof(RPC_ActiveEndCanvas), RpcTarget.AllBuffered, winnerTeamIndex.Key);
+            }
+            else
+            {
+                var winnerTeamIndex = teamScores.FirstOrDefault(x => x.Value >= data.PointsToWin);
+                if (winnerTeamIndex.Value != 0)
+                {
+                    photonView.RPC(nameof(RPC_ActiveEndCanvas), RpcTarget.AllBuffered, winnerTeamIndex.Key);
+                }
             }
         }
 
         [PunRPC]
         private void RPC_ActiveEndCanvas(int winnerTeamIndex)
         {
+            isEnd = true;
             levelUI.ActiveEndCanvas(winnerTeamIndex);
             MyPlayerManager.Instance.SetEndedGame();
         }
