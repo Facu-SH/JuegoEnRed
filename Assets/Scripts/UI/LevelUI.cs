@@ -9,7 +9,8 @@ namespace UI
 {
     public class LevelUI : MonoBehaviourPun
     {
-        [Header("Stats")] [SerializeField] private TextMeshProUGUI timerText;
+        [Header("Stats")] 
+        [SerializeField] private TextMeshProUGUI timerText;
         [SerializeField] private TextMeshProUGUI healthText;
 
         [Header("Team Scores")] 
