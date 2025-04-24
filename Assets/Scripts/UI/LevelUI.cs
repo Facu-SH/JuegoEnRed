@@ -20,8 +20,13 @@ namespace UI
         [SerializeField] private TextMeshProUGUI teamBlueScoreText;
         [SerializeField] private TextMeshProUGUI teamRedScoreText;
 
-        [Header("Win/Lose")] [SerializeField] private GameObject losePanel;
+        [Header("Win/Lose")]
+        [SerializeField] private GameObject losePanel;
         [SerializeField] private GameObject winPanel;
+        [SerializeField] private TextMeshProUGUI redWinText;
+        [SerializeField] private TextMeshProUGUI blueWinText;
+        [SerializeField] private TextMeshProUGUI redLoseText;
+        [SerializeField] private TextMeshProUGUI blueLoseText;
 
         [Header("Start UI Elements List")] [SerializeField]
         private List<GameObject> UI;
@@ -58,10 +63,14 @@ namespace UI
             var myTeam = MyPlayerManager.Instance.Team;
             if (myTeam == winnerTeam)
             {
+                redWinText.text = teamRedScoreText.text;
+                blueWinText.text = teamBlueScoreText.text;
                 winPanel.SetActive(true);
             }
             else
             {
+                redLoseText.text = teamRedScoreText.text;
+                blueLoseText.text = teamBlueScoreText.text;
                 losePanel.SetActive(true);
             }
         }

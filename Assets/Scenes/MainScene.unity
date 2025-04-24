@@ -1703,6 +1703,10 @@ MonoBehaviour:
   teamRedScoreText: {fileID: 1828601338}
   losePanel: {fileID: 1989359202}
   winPanel: {fileID: 1063994462}
+  redWinText: {fileID: 1855152946}
+  blueWinText: {fileID: 1792075003}
+  redLoseText: {fileID: 1712999854}
+  blueLoseText: {fileID: 325396670}
   UI:
   - {fileID: 2025081048}
   - {fileID: 1248787870}
