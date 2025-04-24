@@ -64,12 +64,12 @@ namespace Managers
                 float elapsed = (float)(PhotonNetwork.Time - startTime);
                 levelUI.SetTimer(elapsed);
                 
-                if (!isFloorDown[0] && elapsed > data.TimeToFloorDown1 && floorController != null && photonView.IsMine)
+                if (!isFloorDown[0] && elapsed > data.TimeToFloorDown1 && floorController != null)
                 {
                     isFloorDown[0] = true;
                     floorController.FirstFloorDown();
                 }
-                else if (!isFloorDown[1] && elapsed > data.TimeToFloorDown2 && floorController != null && photonView.IsMine)
+                else if (!isFloorDown[1] && elapsed > data.TimeToFloorDown2 && floorController != null)
                 {
                     isFloorDown[1] = true;
                     floorController.SecondFloorDown();
