@@ -1,3 +1,4 @@
+using System;
 using Cinemachine;
 using Managers;
 using Photon.Pun;
@@ -89,6 +90,14 @@ namespace PLayerScripts
         }
 
         private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.layer == data.GroundLayerIndex)
+            {
+                isGrounded = true;
+            }
+        }
+
+        private void OnTriggerStay(Collider other)
         {
             if (other.gameObject.layer == data.GroundLayerIndex)
             {

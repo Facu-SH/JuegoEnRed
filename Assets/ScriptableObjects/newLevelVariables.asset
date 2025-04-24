@@ -15,3 +15,5 @@ MonoBehaviour:
   pointsToWin: 5
   timeToRespawn: 3
   timeToEndLevel: 120
+  timeToFloorDown1: 40
+  timeToFloorDown2: 80

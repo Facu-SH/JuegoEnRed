@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using ExitGames.Client.Photon;
+using LevelScripts;
 using Photon.Pun;
 using UI;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Managers
 {
@@ -15,10 +17,13 @@ namespace Managers
         [SerializeField] private LevelVariables data;
 
         private LevelUI levelUI;
+        private FloorController floorController;
         private string playerName;
         private string roomCode;
         private double startTime = 0;
         private bool isEnd;
+        private bool[] isFloorDown = new bool[]{false,false};
+        public bool shouldWait;
 
         private Dictionary<int, int> teamScores = new Dictionary<int, int>
         {
@@ -48,15 +53,28 @@ namespace Managers
         {
             PhotonNetworkManager.Instance.OnJoinedRoomEvent -= OnJoinedRoom;
             PhotonNetworkManager.Instance.OnRoomPropertiesUpdateEvent -= OnRoomPropertiesUpdate;
-
         }
 
         private void Update()
         {
+            if (shouldWait) return;
+            
             if (!isEnd && levelUI != null && startTime > 0)
             {
                 float elapsed = (float)(PhotonNetwork.Time - startTime);
                 levelUI.SetTimer(elapsed);
+                
+                if (!isFloorDown[0] && elapsed > data.TimeToFloorDown1 && floorController != null && photonView.IsMine)
+                {
+                    isFloorDown[0] = true;
+                    floorController.FirstFloorDown();
+                }
+                else if (!isFloorDown[1] && elapsed > data.TimeToFloorDown2 && floorController != null && photonView.IsMine)
+                {
+                    isFloorDown[1] = true;
+                    floorController.SecondFloorDown();
+                }
+                
                 if (PhotonNetwork.IsMasterClient && elapsed >= data.TimeToEndLevel)
                 {
                     TryEndGame(true);
@@ -102,11 +120,18 @@ namespace Managers
                 { 0, 0 },
                 { 1, 0 }
             };
+            isFloorDown = new bool[]{false,false};
+            shouldWait = true;
         }
 
         public void SetLevelUIInstance(LevelUI _levelUI)
         {
             levelUI = _levelUI;
+        }
+        
+        public void SetFloorControllerInstance(FloorController _floorController)
+        {
+            floorController = _floorController;
         }
 
         public void OnPlayerDamage(int health)

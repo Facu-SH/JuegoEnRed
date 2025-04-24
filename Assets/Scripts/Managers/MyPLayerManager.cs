@@ -41,6 +41,7 @@ namespace Managers
             Team = (int)shooting.Team;
             SetColorAndTpPlayer();
             levelUI.ActivateUI(Team);
+            GameManager.Instance.shouldWait = false;
         }
 
         private void SetColorAndTpPlayer()

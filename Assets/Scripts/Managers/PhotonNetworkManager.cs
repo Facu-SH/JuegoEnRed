@@ -57,6 +57,7 @@ namespace Managers
             IsConnectedToMasterServer = true;
             OnConnectedToMasterEvent?.Invoke();
         }
+        
         private void OnClientStateChanged(ClientState from, ClientState to)
         {
             if (to == ClientState.Disconnecting || to == ClientState.Disconnected)
@@ -86,6 +87,7 @@ namespace Managers
             base.OnJoinedRoom();
             OnJoinedRoomEvent?.Invoke();
         }
+        
         public override void OnRoomPropertiesUpdate(Hashtable propsThatChanged)
         {
             base.OnRoomPropertiesUpdate(propsThatChanged);
