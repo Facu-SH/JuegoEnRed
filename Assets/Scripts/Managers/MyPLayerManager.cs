@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using PLayerScripts;
 using PLayerScripts.WeaponScripts;
+using UI;
 using UnityEngine;
 
 namespace Managers
@@ -15,6 +16,7 @@ namespace Managers
 
         private Shooting playerShooting;
         private Movement playerMovement;
+        private LevelUI levelUI;
         private GameObject deadMessage;
         private bool isEnd;
 
@@ -38,6 +40,7 @@ namespace Managers
             playerShooting = shooting;
             Team = (int)shooting.Team;
             SetColorAndTpPlayer();
+            levelUI.ActivateUI(Team);
         }
 
         private void SetColorAndTpPlayer()
@@ -48,6 +51,11 @@ namespace Managers
         public void SetPlayerMovementInstance(Movement movement)
         {
             playerMovement = movement;
+        }
+        
+        public void SetLevelUIInstance(LevelUI _levelUI)
+        {
+            levelUI = _levelUI;
         }
 
         public void SetEndedGame()

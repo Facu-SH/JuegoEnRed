@@ -31,10 +31,11 @@ namespace UI
             if (photonView.IsMine)
             {
                 GameManager.Instance.SetLevelUIInstance(this);
+                MyPlayerManager.Instance.SetLevelUIInstance(this);
             }
         }
 
-        private void Start()
+        public void ActivateUI(int team)
         {
             if (!photonView.IsMine) return;
             
@@ -43,7 +44,7 @@ namespace UI
                 _gameObject.SetActive(true);
             }
             
-            if (MyPlayerManager.Instance.Team == 0)
+            if (team == 1)
             {
                 myTeamText.text = $"Team Red";
                 myTeamText.color = Color.red;
