@@ -2,7 +2,6 @@ using Enums;
 using Photon.Pun;
 using PLayerScripts;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Managers
 {

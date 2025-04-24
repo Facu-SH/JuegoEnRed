@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Enums;
+﻿using System.Collections.Generic;
 using Managers;
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace UI
 {
