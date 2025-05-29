@@ -21,6 +21,7 @@ namespace Managers
             }
 
             DontDestroyOnLoad(gameObject);
+            m_audioSource.volume = PlayerPrefs.GetFloat("MusicAudio", 0.45f);
         }
 
         public void PlayMenuMusic()

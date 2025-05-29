@@ -17,6 +17,7 @@ namespace Assets.Scripts.UI.Sliders
             // se mantiene la posicion del slider
             slider.value = PlayerPrefs.GetFloat("volumenAudio", 0.45f);
             audio.volume = slider.value;
+            gameObject.SetActive(false);
         }
 
         public void ChangeVolumen(float value)

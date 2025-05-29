@@ -19,6 +19,7 @@ namespace Managers
             }
 
             DontDestroyOnLoad(gameObject);
+            m_audioSource.volume = PlayerPrefs.GetFloat("volumenAudio", 0.45f);
         }
 
         public void PlaySound(AudioClip p_Clip)
