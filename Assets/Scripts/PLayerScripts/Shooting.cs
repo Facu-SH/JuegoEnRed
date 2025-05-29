@@ -47,6 +47,7 @@ namespace PLayerScripts.WeaponScripts
                 0,
                 new object[] { totalForce, team }
             );
+            AudioManager.Instance.PlaySound(data.ShootingSound);
         }
     }
 }

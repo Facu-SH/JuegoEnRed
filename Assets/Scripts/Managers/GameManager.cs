@@ -13,6 +13,7 @@ namespace Managers
         public static GameManager Instance { get; private set; }
 
         [SerializeField] private LevelVariables data;
+        [SerializeField] private AudioClip floorSound;
 
         private LevelUI levelUI;
         private FloorController floorController;
@@ -66,11 +67,14 @@ namespace Managers
                 {
                     isFloorDown[0] = true;
                     floorController.FirstFloorDown();
+
+                    AudioManager.Instance.PlaySound(floorSound);
                 }
                 else if (!isFloorDown[1] && elapsed > data.TimeToFloorDown2 && floorController != null)
                 {
                     isFloorDown[1] = true;
                     floorController.SecondFloorDown();
+                    AudioManager.Instance.PlaySound(floorSound);
                 }
                 
                 if (PhotonNetwork.IsMasterClient && elapsed >= data.TimeToEndLevel)

@@ -1,4 +1,5 @@
-﻿using Managers;
+﻿using System;
+using Managers;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,6 +9,11 @@ namespace UI
     public class InGamePause : MonoBehaviour
     {
         [SerializeField] private GameObject pauseMenu;
+
+        private void Start()
+        {
+            MusicManager.Instance.PlayGameMusic();
+        }
 
         private void Update()
         {

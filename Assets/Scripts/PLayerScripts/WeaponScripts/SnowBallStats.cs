@@ -12,6 +12,8 @@ namespace PLayerScripts.WeaponScripts
         [SerializeField] private int playerLayerIndex;
         [SerializeField] private float knockbackForce;
         [SerializeField] private int damage;
+        [SerializeField] private AudioClip explodeSound;
+        [SerializeField] private AudioClip shootingSound;
         
         [Header("Fire Rate")]
         [SerializeField] private float fireRate = 0.2f;
@@ -28,5 +30,7 @@ namespace PLayerScripts.WeaponScripts
         public int Damage => damage;
         public float FireRate => fireRate;
         public GameObject IceParticlesPrefab => iceParticlesPrefab;
+        public AudioClip ExplodeSound => explodeSound;
+        public AudioClip ShootingSound => shootingSound;
     }
 }

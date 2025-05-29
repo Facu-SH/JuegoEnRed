@@ -23,6 +23,9 @@ public class BasePLayerStats : ScriptableObject
     
     [Header("Materials")]
     [SerializeField] private Material[] teamMaterials;
+    
+    [Header("Sounds")]
+    [SerializeField] private AudioClip fallSound;
 
     public int MaxHealth => maxHealth;
     public int RespawnLayerIndex => respawnLayerIndex;
@@ -36,4 +39,5 @@ public class BasePLayerStats : ScriptableObject
     public float SprintMultiplier => sprintMultiplier;
     public float MinStaminaToSprint => minStaminaToSprint;
     public Material[] TeamMaterials => teamMaterials;
+    public AudioClip FallSound => fallSound;
 }

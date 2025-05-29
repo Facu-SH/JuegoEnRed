@@ -1,5 +1,6 @@
 ﻿using Enums;
 using Interfaces;
+using Managers;
 using Photon.Pun;
 using UnityEngine;
 
@@ -48,6 +49,7 @@ namespace PLayerScripts.WeaponScripts
 
             PhotonNetwork.Instantiate(data.IceParticlesPrefab.name, transform.position, Quaternion.identity);
             PhotonNetwork.Destroy(gameObject);
+            AudioManager.Instance.PlaySound(data.ExplodeSound);
         }
     }
 }

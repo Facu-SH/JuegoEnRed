@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -38,6 +39,11 @@ namespace UI
             {
                 OnConnectedToMaster();
             }
+        }
+
+        private void Start()
+        {
+            MusicManager.Instance.PlayMenuMusic();
         }
 
         private void OnDestroy()

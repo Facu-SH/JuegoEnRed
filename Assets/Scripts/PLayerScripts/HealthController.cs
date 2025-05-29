@@ -41,6 +41,8 @@ namespace PLayerScripts
                 photonView.RPC(nameof(RPC_NotifyDeath), RpcTarget.All, (int)team);
 
                 photonView.RPC(nameof(RPC_Despawn), RpcTarget.All);
+                
+                AudioManager.Instance.PlaySound(data.FallSound);
             }
         }
 

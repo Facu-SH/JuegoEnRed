@@ -55,6 +55,7 @@ namespace UI
 
         public void ActiveEndCanvas(int winnerTeam)
         {
+            MusicManager.Instance.PlayEndMusic();
             var myTeam = MyPlayerManager.Instance.Team;
             if (myTeam == winnerTeam)
             {

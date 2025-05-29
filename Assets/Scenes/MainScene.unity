@@ -2941,6 +2941,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   firstFloorAnimator: {fileID: 7803344245052200562}
   secondFloorAnimator: {fileID: 8452710187011516877}
+  floorSound: {fileID: 8300000, guid: 0f184b9de9869c948921b2d616f94e0e, type: 3}
 --- !u!1 &5076638903662583002
 GameObject:
   m_ObjectHideFlags: 0
