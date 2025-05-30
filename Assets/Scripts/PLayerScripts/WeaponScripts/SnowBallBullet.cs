@@ -56,5 +56,10 @@ namespace PLayerScripts.WeaponScripts
         {
             AudioManager.Instance.PlaySound(data.ExplodeSound);
         }
+
+        private void OnEnable()
+        {
+            AudioManager.Instance.PlaySound(data.ShootingSound);
+        }
     }
 }
