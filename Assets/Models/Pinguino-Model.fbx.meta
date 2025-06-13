@@ -1,9 +1,19 @@
 fileFormatVersion: 2
-guid: f25fdd317ba913a49b9bf605108bb2cb
+guid: bf2e74634aebe2e4a84134af086220f2
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Pinguino_Base
+    second: {fileID: 2100000, guid: fda3c88c20ec54341914363c22769c04, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Vincha
+    second: {fileID: 2100000, guid: 900b474e8d0e692419bf58249e0b04a8, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

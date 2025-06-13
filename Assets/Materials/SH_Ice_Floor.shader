@@ -4,7 +4,16 @@ Shader "SH_Ice_Floor"
 {
 	Properties
 	{
-		
+		_RemapVertex("RemapVertex", Vector) = (0,0,0,0)
+		_SnowNoiseRemap("SnowNoiseRemap", Vector) = (0,0,0,0)
+		_VoronoiScale("VoronoiScale", Vector) = (0,0,0,0)
+		_Vector0("Vector 0", Vector) = (0,0,0,0)
+		_SnowNoiseScale("SnowNoiseScale", Float) = 0
+		_IceColor("IceColor", Color) = (0,0,0,0)
+		_IceColor2("IceColor2", Color) = (0,0,0,0)
+		_SnowColor("SnowColor", Color) = (0,0,0,0)
+		_SnowColor2("SnowColor2", Color) = (0,0,0,0)
+
 		//_TransmissionShadow( "Transmission Shadow", Range( 0, 1 ) ) = 0.5
 		//_TransStrength( "Trans Strength", Range( 0, 50 ) ) = 1
 		//_TransNormal( "Trans Normal Distortion", Range( 0, 1 ) ) = 0.5
@@ -185,7 +194,7 @@ Shader "SH_Ice_Floor"
 				float3 normal : NORMAL;
 				float4 texcoord1 : TEXCOORD1;
 				float4 texcoord2 : TEXCOORD2;
-				
+				float4 ase_texcoord : TEXCOORD0;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 			
@@ -219,7 +228,9 @@ Shader "SH_Ice_Floor"
 				#if defined(ASE_NEEDS_FRAG_SCREEN_POSITION)
 				float4 screenPos : TEXCOORD8;
 				#endif
-				
+				float4 ase_texcoord9 : TEXCOORD9;
+				float4 ase_texcoord10 : TEXCOORD10;
+				float3 ase_normal : NORMAL;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
@@ -243,9 +254,78 @@ Shader "SH_Ice_Floor"
 				float _TessEdgeLength;
 				float _TessMaxDisp;
 			#endif
-			
+			uniform float4 _IceColor;
+			uniform float4 _IceColor2;
+			uniform float2 _VoronoiScale;
+			uniform float2 _Vector0;
+			uniform float4 _SnowColor;
+			uniform float4 _SnowColor2;
+			uniform float _SnowNoiseScale;
+			uniform float2 _SnowNoiseRemap;
+			uniform float2 _RemapVertex;
+
 	
+					float2 voronoihash45( float2 p )
+					{
+						
+						p = float2( dot( p, float2( 127.1, 311.7 ) ), dot( p, float2( 269.5, 183.3 ) ) );
+						return frac( sin( p ) *43758.5453);
+					}
 			
+					float voronoi45( float2 v, float time, inout float2 id, inout float2 mr, float smoothness )
+					{
+						float2 n = floor( v );
+						float2 f = frac( v );
+						float F1 = 8.0;
+						float F2 = 8.0; float2 mg = 0;
+						for ( int j = -1; j <= 1; j++ )
+						{
+							for ( int i = -1; i <= 1; i++ )
+						 	{
+						 		float2 g = float2( i, j );
+						 		float2 o = voronoihash45( n + g );
+								o = ( sin( time + o * 6.2831 ) * 0.5 + 0.5 ); float2 r = f - g - o;
+								float d = 0.5 * dot( r, r );
+						 		if( d<F1 ) {
+						 			F2 = F1;
+						 			F1 = d; mg = g; mr = r; id = o;
+						 		} else if( d<F2 ) {
+						 			F2 = d;
+						 		}
+						 	}
+						}
+						return F1;
+					}
+			
+			float3 mod2D289( float3 x ) { return x - floor( x * ( 1.0 / 289.0 ) ) * 289.0; }
+			float2 mod2D289( float2 x ) { return x - floor( x * ( 1.0 / 289.0 ) ) * 289.0; }
+			float3 permute( float3 x ) { return mod2D289( ( ( x * 34.0 ) + 1.0 ) * x ); }
+			float snoise( float2 v )
+			{
+				const float4 C = float4( 0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439 );
+				float2 i = floor( v + dot( v, C.yy ) );
+				float2 x0 = v - i + dot( i, C.xx );
+				float2 i1;
+				i1 = ( x0.x > x0.y ) ? float2( 1.0, 0.0 ) : float2( 0.0, 1.0 );
+				float4 x12 = x0.xyxy + C.xxzz;
+				x12.xy -= i1;
+				i = mod2D289( i );
+				float3 p = permute( permute( i.y + float3( 0.0, i1.y, 1.0 ) ) + i.x + float3( 0.0, i1.x, 1.0 ) );
+				float3 m = max( 0.5 - float3( dot( x0, x0 ), dot( x12.xy, x12.xy ), dot( x12.zw, x12.zw ) ), 0.0 );
+				m = m * m;
+				m = m * m;
+				float3 x = 2.0 * frac( p * C.www ) - 1.0;
+				float3 h = abs( x ) - 0.5;
+				float3 ox = floor( x + 0.5 );
+				float3 a0 = x - ox;
+				m *= 1.79284291400159 - 0.85373472095314 * ( a0 * a0 + h * h );
+				float3 g;
+				g.x = a0.x * x0.x + h.x * x0.y;
+				g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+				return 130.0 * dot( m, g );
+			}
+			
+
 			v2f VertexFunction (appdata v  ) {
 				UNITY_SETUP_INSTANCE_ID(v);
 				v2f o;
@@ -253,7 +333,12 @@ Shader "SH_Ice_Floor"
 				UNITY_TRANSFER_INSTANCE_ID(v,o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
+				o.ase_texcoord9.xy = v.ase_texcoord.xy;
+				o.ase_texcoord10 = v.vertex;
+				o.ase_normal = v.normal;
 				
+				//setting value to unused interpolator channels and avoid initialization warnings
+				o.ase_texcoord9.zw = 0;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					float3 defaultVertexValue = v.vertex.xyz;
 				#else
@@ -326,7 +411,8 @@ Shader "SH_Ice_Floor"
 				float3 normal : NORMAL;
 				float4 texcoord1 : TEXCOORD1;
 				float4 texcoord2 : TEXCOORD2;
-				
+				float4 ase_texcoord : TEXCOORD0;
+
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -346,7 +432,7 @@ Shader "SH_Ice_Floor"
 				o.normal = v.normal;
 				o.texcoord1 = v.texcoord1;
 				o.texcoord2 = v.texcoord2;
-				
+				o.ase_texcoord = v.ase_texcoord;
 				return o;
 			}
 
@@ -388,7 +474,7 @@ Shader "SH_Ice_Floor"
 				o.normal = patch[0].normal * bary.x + patch[1].normal * bary.y + patch[2].normal * bary.z;
 				o.texcoord1 = patch[0].texcoord1 * bary.x + patch[1].texcoord1 * bary.y + patch[2].texcoord1 * bary.z;
 				o.texcoord2 = patch[0].texcoord2 * bary.x + patch[1].texcoord2 * bary.y + patch[2].texcoord2 * bary.z;
-				
+				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
 				#if defined(ASE_PHONG_TESSELLATION)
 				float3 pp[3];
 				for (int i = 0; i < 3; ++i)
@@ -437,8 +523,28 @@ Shader "SH_Ice_Floor"
 				float4 ScreenPos = IN.screenPos;
 				#endif
 
+				float time45 = _VoronoiScale.x;
+				float2 texCoord50 = IN.ase_texcoord9.xy * float2( 1,1 ) + float2( 0,0 );
+				float2 coords45 = texCoord50 * _VoronoiScale.y;
+				float2 id45 = 0;
+				float2 uv45 = 0;
+				float voroi45 = voronoi45( coords45, time45, id45, uv45, 0 );
+				float IceMask49 = (0.0 + (voroi45 - _Vector0.x) * (1.0 - 0.0) / (_Vector0.y - _Vector0.x));
+				float clampResult85 = clamp( IceMask49 , 0.0 , 1.0 );
+				float4 lerpResult83 = lerp( _IceColor , _IceColor2 , clampResult85);
+				float4 Ice60 = lerpResult83;
+				float simplePerlin2D25 = snoise( IN.ase_texcoord10.xyz.xy*_SnowNoiseScale );
+				simplePerlin2D25 = simplePerlin2D25*0.5 + 0.5;
+				float SnowTexture39 = (0.0 + (simplePerlin2D25 - _SnowNoiseRemap.x) * (1.0 - 0.0) / (_SnowNoiseRemap.y - _SnowNoiseRemap.x));
+				float clampResult89 = clamp( SnowTexture39 , 0.0 , 1.0 );
+				float4 lerpResult88 = lerp( _SnowColor , _SnowColor2 , clampResult89);
+				float4 Snow62 = lerpResult88;
+				float clampResult86 = clamp( (0.0 + (IN.ase_normal.z - _RemapVertex.x) * (1.0 - 0.0) / (_RemapVertex.y - _RemapVertex.x)) , 0.0 , 1.0 );
+				float SnowMask33 = clampResult86;
+				float4 lerpResult75 = lerp( Ice60 , Snow62 , SnowMask33);
+				float4 Color80 = lerpResult75;
 				
-				o.Albedo = fixed3( 0.5, 0.5, 0.5 );
+				o.Albedo = Color80.rgb;
 				o.Normal = fixed3( 0, 0, 1 );
 				o.Emission = half3( 0, 0, 0 );
 				#if defined(_SPECULAR_SETUP)
@@ -634,7 +740,7 @@ Shader "SH_Ice_Floor"
 				float3 normal : NORMAL;
 				float4 texcoord1 : TEXCOORD1;
 				float4 texcoord2 : TEXCOORD2;
-				
+				float4 ase_texcoord : TEXCOORD0;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 			struct v2f {
@@ -661,7 +767,9 @@ Shader "SH_Ice_Floor"
 				#if defined(ASE_NEEDS_FRAG_SCREEN_POSITION)
 				float4 screenPos : TEXCOORD8;
 				#endif
-				
+				float4 ase_texcoord9 : TEXCOORD9;
+				float4 ase_texcoord10 : TEXCOORD10;
+				float3 ase_normal : NORMAL;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
@@ -685,9 +793,78 @@ Shader "SH_Ice_Floor"
 				float _TessEdgeLength;
 				float _TessMaxDisp;
 			#endif
-			
+			uniform float4 _IceColor;
+			uniform float4 _IceColor2;
+			uniform float2 _VoronoiScale;
+			uniform float2 _Vector0;
+			uniform float4 _SnowColor;
+			uniform float4 _SnowColor2;
+			uniform float _SnowNoiseScale;
+			uniform float2 _SnowNoiseRemap;
+			uniform float2 _RemapVertex;
+
 	
+					float2 voronoihash45( float2 p )
+					{
+						
+						p = float2( dot( p, float2( 127.1, 311.7 ) ), dot( p, float2( 269.5, 183.3 ) ) );
+						return frac( sin( p ) *43758.5453);
+					}
 			
+					float voronoi45( float2 v, float time, inout float2 id, inout float2 mr, float smoothness )
+					{
+						float2 n = floor( v );
+						float2 f = frac( v );
+						float F1 = 8.0;
+						float F2 = 8.0; float2 mg = 0;
+						for ( int j = -1; j <= 1; j++ )
+						{
+							for ( int i = -1; i <= 1; i++ )
+						 	{
+						 		float2 g = float2( i, j );
+						 		float2 o = voronoihash45( n + g );
+								o = ( sin( time + o * 6.2831 ) * 0.5 + 0.5 ); float2 r = f - g - o;
+								float d = 0.5 * dot( r, r );
+						 		if( d<F1 ) {
+						 			F2 = F1;
+						 			F1 = d; mg = g; mr = r; id = o;
+						 		} else if( d<F2 ) {
+						 			F2 = d;
+						 		}
+						 	}
+						}
+						return F1;
+					}
+			
+			float3 mod2D289( float3 x ) { return x - floor( x * ( 1.0 / 289.0 ) ) * 289.0; }
+			float2 mod2D289( float2 x ) { return x - floor( x * ( 1.0 / 289.0 ) ) * 289.0; }
+			float3 permute( float3 x ) { return mod2D289( ( ( x * 34.0 ) + 1.0 ) * x ); }
+			float snoise( float2 v )
+			{
+				const float4 C = float4( 0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439 );
+				float2 i = floor( v + dot( v, C.yy ) );
+				float2 x0 = v - i + dot( i, C.xx );
+				float2 i1;
+				i1 = ( x0.x > x0.y ) ? float2( 1.0, 0.0 ) : float2( 0.0, 1.0 );
+				float4 x12 = x0.xyxy + C.xxzz;
+				x12.xy -= i1;
+				i = mod2D289( i );
+				float3 p = permute( permute( i.y + float3( 0.0, i1.y, 1.0 ) ) + i.x + float3( 0.0, i1.x, 1.0 ) );
+				float3 m = max( 0.5 - float3( dot( x0, x0 ), dot( x12.xy, x12.xy ), dot( x12.zw, x12.zw ) ), 0.0 );
+				m = m * m;
+				m = m * m;
+				float3 x = 2.0 * frac( p * C.www ) - 1.0;
+				float3 h = abs( x ) - 0.5;
+				float3 ox = floor( x + 0.5 );
+				float3 a0 = x - ox;
+				m *= 1.79284291400159 - 0.85373472095314 * ( a0 * a0 + h * h );
+				float3 g;
+				g.x = a0.x * x0.x + h.x * x0.y;
+				g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+				return 130.0 * dot( m, g );
+			}
+			
+
 			v2f VertexFunction (appdata v  ) {
 				UNITY_SETUP_INSTANCE_ID(v);
 				v2f o;
@@ -695,7 +872,12 @@ Shader "SH_Ice_Floor"
 				UNITY_TRANSFER_INSTANCE_ID(v,o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
+				o.ase_texcoord9.xy = v.ase_texcoord.xy;
+				o.ase_texcoord10 = v.vertex;
+				o.ase_normal = v.normal;
 				
+				//setting value to unused interpolator channels and avoid initialization warnings
+				o.ase_texcoord9.zw = 0;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					float3 defaultVertexValue = v.vertex.xyz;
 				#else
@@ -748,7 +930,8 @@ Shader "SH_Ice_Floor"
 				float3 normal : NORMAL;
 				float4 texcoord1 : TEXCOORD1;
 				float4 texcoord2 : TEXCOORD2;
-				
+				float4 ase_texcoord : TEXCOORD0;
+
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -768,7 +951,7 @@ Shader "SH_Ice_Floor"
 				o.normal = v.normal;
 				o.texcoord1 = v.texcoord1;
 				o.texcoord2 = v.texcoord2;
-				
+				o.ase_texcoord = v.ase_texcoord;
 				return o;
 			}
 
@@ -810,7 +993,7 @@ Shader "SH_Ice_Floor"
 				o.normal = patch[0].normal * bary.x + patch[1].normal * bary.y + patch[2].normal * bary.z;
 				o.texcoord1 = patch[0].texcoord1 * bary.x + patch[1].texcoord1 * bary.y + patch[2].texcoord1 * bary.z;
 				o.texcoord2 = patch[0].texcoord2 * bary.x + patch[1].texcoord2 * bary.y + patch[2].texcoord2 * bary.z;
-				
+				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
 				#if defined(ASE_PHONG_TESSELLATION)
 				float3 pp[3];
 				for (int i = 0; i < 3; ++i)
@@ -860,8 +1043,28 @@ Shader "SH_Ice_Floor"
 				#endif
 
 
+				float time45 = _VoronoiScale.x;
+				float2 texCoord50 = IN.ase_texcoord9.xy * float2( 1,1 ) + float2( 0,0 );
+				float2 coords45 = texCoord50 * _VoronoiScale.y;
+				float2 id45 = 0;
+				float2 uv45 = 0;
+				float voroi45 = voronoi45( coords45, time45, id45, uv45, 0 );
+				float IceMask49 = (0.0 + (voroi45 - _Vector0.x) * (1.0 - 0.0) / (_Vector0.y - _Vector0.x));
+				float clampResult85 = clamp( IceMask49 , 0.0 , 1.0 );
+				float4 lerpResult83 = lerp( _IceColor , _IceColor2 , clampResult85);
+				float4 Ice60 = lerpResult83;
+				float simplePerlin2D25 = snoise( IN.ase_texcoord10.xyz.xy*_SnowNoiseScale );
+				simplePerlin2D25 = simplePerlin2D25*0.5 + 0.5;
+				float SnowTexture39 = (0.0 + (simplePerlin2D25 - _SnowNoiseRemap.x) * (1.0 - 0.0) / (_SnowNoiseRemap.y - _SnowNoiseRemap.x));
+				float clampResult89 = clamp( SnowTexture39 , 0.0 , 1.0 );
+				float4 lerpResult88 = lerp( _SnowColor , _SnowColor2 , clampResult89);
+				float4 Snow62 = lerpResult88;
+				float clampResult86 = clamp( (0.0 + (IN.ase_normal.z - _RemapVertex.x) * (1.0 - 0.0) / (_RemapVertex.y - _RemapVertex.x)) , 0.0 , 1.0 );
+				float SnowMask33 = clampResult86;
+				float4 lerpResult75 = lerp( Ice60 , Snow62 , SnowMask33);
+				float4 Color80 = lerpResult75;
 				
-				o.Albedo = fixed3( 0.5, 0.5, 0.5 );
+				o.Albedo = Color80.rgb;
 				o.Normal = fixed3( 0, 0, 1 );
 				o.Emission = half3( 0, 0, 0 );
 				#if defined(_SPECULAR_SETUP)
@@ -1010,7 +1213,7 @@ Shader "SH_Ice_Floor"
 				float3 normal : NORMAL;
 				float4 texcoord1 : TEXCOORD1;
 				float4 texcoord2 : TEXCOORD2;
-				
+				float4 ase_texcoord : TEXCOORD0;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -1033,7 +1236,9 @@ Shader "SH_Ice_Floor"
 				float4 tSpace0 : TEXCOORD5;
 				float4 tSpace1 : TEXCOORD6;
 				float4 tSpace2 : TEXCOORD7;
-				
+				float4 ase_texcoord8 : TEXCOORD8;
+				float4 ase_texcoord9 : TEXCOORD9;
+				float3 ase_normal : NORMAL;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
@@ -1050,9 +1255,78 @@ Shader "SH_Ice_Floor"
 				float _TessEdgeLength;
 				float _TessMaxDisp;
 			#endif
-			
+			uniform float4 _IceColor;
+			uniform float4 _IceColor2;
+			uniform float2 _VoronoiScale;
+			uniform float2 _Vector0;
+			uniform float4 _SnowColor;
+			uniform float4 _SnowColor2;
+			uniform float _SnowNoiseScale;
+			uniform float2 _SnowNoiseRemap;
+			uniform float2 _RemapVertex;
+
 	
+					float2 voronoihash45( float2 p )
+					{
+						
+						p = float2( dot( p, float2( 127.1, 311.7 ) ), dot( p, float2( 269.5, 183.3 ) ) );
+						return frac( sin( p ) *43758.5453);
+					}
 			
+					float voronoi45( float2 v, float time, inout float2 id, inout float2 mr, float smoothness )
+					{
+						float2 n = floor( v );
+						float2 f = frac( v );
+						float F1 = 8.0;
+						float F2 = 8.0; float2 mg = 0;
+						for ( int j = -1; j <= 1; j++ )
+						{
+							for ( int i = -1; i <= 1; i++ )
+						 	{
+						 		float2 g = float2( i, j );
+						 		float2 o = voronoihash45( n + g );
+								o = ( sin( time + o * 6.2831 ) * 0.5 + 0.5 ); float2 r = f - g - o;
+								float d = 0.5 * dot( r, r );
+						 		if( d<F1 ) {
+						 			F2 = F1;
+						 			F1 = d; mg = g; mr = r; id = o;
+						 		} else if( d<F2 ) {
+						 			F2 = d;
+						 		}
+						 	}
+						}
+						return F1;
+					}
+			
+			float3 mod2D289( float3 x ) { return x - floor( x * ( 1.0 / 289.0 ) ) * 289.0; }
+			float2 mod2D289( float2 x ) { return x - floor( x * ( 1.0 / 289.0 ) ) * 289.0; }
+			float3 permute( float3 x ) { return mod2D289( ( ( x * 34.0 ) + 1.0 ) * x ); }
+			float snoise( float2 v )
+			{
+				const float4 C = float4( 0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439 );
+				float2 i = floor( v + dot( v, C.yy ) );
+				float2 x0 = v - i + dot( i, C.xx );
+				float2 i1;
+				i1 = ( x0.x > x0.y ) ? float2( 1.0, 0.0 ) : float2( 0.0, 1.0 );
+				float4 x12 = x0.xyxy + C.xxzz;
+				x12.xy -= i1;
+				i = mod2D289( i );
+				float3 p = permute( permute( i.y + float3( 0.0, i1.y, 1.0 ) ) + i.x + float3( 0.0, i1.x, 1.0 ) );
+				float3 m = max( 0.5 - float3( dot( x0, x0 ), dot( x12.xy, x12.xy ), dot( x12.zw, x12.zw ) ), 0.0 );
+				m = m * m;
+				m = m * m;
+				float3 x = 2.0 * frac( p * C.www ) - 1.0;
+				float3 h = abs( x ) - 0.5;
+				float3 ox = floor( x + 0.5 );
+				float3 a0 = x - ox;
+				m *= 1.79284291400159 - 0.85373472095314 * ( a0 * a0 + h * h );
+				float3 g;
+				g.x = a0.x * x0.x + h.x * x0.y;
+				g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+				return 130.0 * dot( m, g );
+			}
+			
+
 			v2f VertexFunction (appdata v  ) {
 				UNITY_SETUP_INSTANCE_ID(v);
 				v2f o;
@@ -1060,7 +1334,12 @@ Shader "SH_Ice_Floor"
 				UNITY_TRANSFER_INSTANCE_ID(v,o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
+				o.ase_texcoord8.xy = v.ase_texcoord.xy;
+				o.ase_texcoord9 = v.vertex;
+				o.ase_normal = v.normal;
 				
+				//setting value to unused interpolator channels and avoid initialization warnings
+				o.ase_texcoord8.zw = 0;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					float3 defaultVertexValue = v.vertex.xyz;
 				#else
@@ -1115,7 +1394,8 @@ Shader "SH_Ice_Floor"
 				float3 normal : NORMAL;
 				float4 texcoord1 : TEXCOORD1;
 				float4 texcoord2 : TEXCOORD2;
-				
+				float4 ase_texcoord : TEXCOORD0;
+
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -1135,7 +1415,7 @@ Shader "SH_Ice_Floor"
 				o.normal = v.normal;
 				o.texcoord1 = v.texcoord1;
 				o.texcoord2 = v.texcoord2;
-				
+				o.ase_texcoord = v.ase_texcoord;
 				return o;
 			}
 
@@ -1177,7 +1457,7 @@ Shader "SH_Ice_Floor"
 				o.normal = patch[0].normal * bary.x + patch[1].normal * bary.y + patch[2].normal * bary.z;
 				o.texcoord1 = patch[0].texcoord1 * bary.x + patch[1].texcoord1 * bary.y + patch[2].texcoord1 * bary.z;
 				o.texcoord2 = patch[0].texcoord2 * bary.x + patch[1].texcoord2 * bary.y + patch[2].texcoord2 * bary.z;
-				
+				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
 				#if defined(ASE_PHONG_TESSELLATION)
 				float3 pp[3];
 				for (int i = 0; i < 3; ++i)
@@ -1226,8 +1506,28 @@ Shader "SH_Ice_Floor"
 				float3 worldViewDir = normalize(UnityWorldSpaceViewDir(worldPos));
 				half atten = 1;
 
+				float time45 = _VoronoiScale.x;
+				float2 texCoord50 = IN.ase_texcoord8.xy * float2( 1,1 ) + float2( 0,0 );
+				float2 coords45 = texCoord50 * _VoronoiScale.y;
+				float2 id45 = 0;
+				float2 uv45 = 0;
+				float voroi45 = voronoi45( coords45, time45, id45, uv45, 0 );
+				float IceMask49 = (0.0 + (voroi45 - _Vector0.x) * (1.0 - 0.0) / (_Vector0.y - _Vector0.x));
+				float clampResult85 = clamp( IceMask49 , 0.0 , 1.0 );
+				float4 lerpResult83 = lerp( _IceColor , _IceColor2 , clampResult85);
+				float4 Ice60 = lerpResult83;
+				float simplePerlin2D25 = snoise( IN.ase_texcoord9.xyz.xy*_SnowNoiseScale );
+				simplePerlin2D25 = simplePerlin2D25*0.5 + 0.5;
+				float SnowTexture39 = (0.0 + (simplePerlin2D25 - _SnowNoiseRemap.x) * (1.0 - 0.0) / (_SnowNoiseRemap.y - _SnowNoiseRemap.x));
+				float clampResult89 = clamp( SnowTexture39 , 0.0 , 1.0 );
+				float4 lerpResult88 = lerp( _SnowColor , _SnowColor2 , clampResult89);
+				float4 Snow62 = lerpResult88;
+				float clampResult86 = clamp( (0.0 + (IN.ase_normal.z - _RemapVertex.x) * (1.0 - 0.0) / (_RemapVertex.y - _RemapVertex.x)) , 0.0 , 1.0 );
+				float SnowMask33 = clampResult86;
+				float4 lerpResult75 = lerp( Ice60 , Snow62 , SnowMask33);
+				float4 Color80 = lerpResult75;
 				
-				o.Albedo = fixed3( 0.5, 0.5, 0.5 );
+				o.Albedo = Color80.rgb;
 				o.Normal = fixed3( 0, 0, 1 );
 				o.Emission = half3( 0, 0, 0 );
 				#if defined(_SPECULAR_SETUP)
@@ -1373,7 +1673,7 @@ Shader "SH_Ice_Floor"
 				float3 normal : NORMAL;
 				float4 texcoord1 : TEXCOORD1;
 				float4 texcoord2 : TEXCOORD2;
-				
+				float4 ase_texcoord : TEXCOORD0;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 			struct v2f {
@@ -1386,7 +1686,9 @@ Shader "SH_Ice_Floor"
 					float2 vizUV : TEXCOORD1;
 					float4 lightCoord : TEXCOORD2;
 				#endif
-				
+				float4 ase_texcoord3 : TEXCOORD3;
+				float4 ase_texcoord4 : TEXCOORD4;
+				float3 ase_normal : NORMAL;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
@@ -1399,9 +1701,78 @@ Shader "SH_Ice_Floor"
 				float _TessEdgeLength;
 				float _TessMaxDisp;
 			#endif
-			
+			uniform float4 _IceColor;
+			uniform float4 _IceColor2;
+			uniform float2 _VoronoiScale;
+			uniform float2 _Vector0;
+			uniform float4 _SnowColor;
+			uniform float4 _SnowColor2;
+			uniform float _SnowNoiseScale;
+			uniform float2 _SnowNoiseRemap;
+			uniform float2 _RemapVertex;
+
 	
+					float2 voronoihash45( float2 p )
+					{
+						
+						p = float2( dot( p, float2( 127.1, 311.7 ) ), dot( p, float2( 269.5, 183.3 ) ) );
+						return frac( sin( p ) *43758.5453);
+					}
 			
+					float voronoi45( float2 v, float time, inout float2 id, inout float2 mr, float smoothness )
+					{
+						float2 n = floor( v );
+						float2 f = frac( v );
+						float F1 = 8.0;
+						float F2 = 8.0; float2 mg = 0;
+						for ( int j = -1; j <= 1; j++ )
+						{
+							for ( int i = -1; i <= 1; i++ )
+						 	{
+						 		float2 g = float2( i, j );
+						 		float2 o = voronoihash45( n + g );
+								o = ( sin( time + o * 6.2831 ) * 0.5 + 0.5 ); float2 r = f - g - o;
+								float d = 0.5 * dot( r, r );
+						 		if( d<F1 ) {
+						 			F2 = F1;
+						 			F1 = d; mg = g; mr = r; id = o;
+						 		} else if( d<F2 ) {
+						 			F2 = d;
+						 		}
+						 	}
+						}
+						return F1;
+					}
+			
+			float3 mod2D289( float3 x ) { return x - floor( x * ( 1.0 / 289.0 ) ) * 289.0; }
+			float2 mod2D289( float2 x ) { return x - floor( x * ( 1.0 / 289.0 ) ) * 289.0; }
+			float3 permute( float3 x ) { return mod2D289( ( ( x * 34.0 ) + 1.0 ) * x ); }
+			float snoise( float2 v )
+			{
+				const float4 C = float4( 0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439 );
+				float2 i = floor( v + dot( v, C.yy ) );
+				float2 x0 = v - i + dot( i, C.xx );
+				float2 i1;
+				i1 = ( x0.x > x0.y ) ? float2( 1.0, 0.0 ) : float2( 0.0, 1.0 );
+				float4 x12 = x0.xyxy + C.xxzz;
+				x12.xy -= i1;
+				i = mod2D289( i );
+				float3 p = permute( permute( i.y + float3( 0.0, i1.y, 1.0 ) ) + i.x + float3( 0.0, i1.x, 1.0 ) );
+				float3 m = max( 0.5 - float3( dot( x0, x0 ), dot( x12.xy, x12.xy ), dot( x12.zw, x12.zw ) ), 0.0 );
+				m = m * m;
+				m = m * m;
+				float3 x = 2.0 * frac( p * C.www ) - 1.0;
+				float3 h = abs( x ) - 0.5;
+				float3 ox = floor( x + 0.5 );
+				float3 a0 = x - ox;
+				m *= 1.79284291400159 - 0.85373472095314 * ( a0 * a0 + h * h );
+				float3 g;
+				g.x = a0.x * x0.x + h.x * x0.y;
+				g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+				return 130.0 * dot( m, g );
+			}
+			
+
 			v2f VertexFunction (appdata v  ) {
 				UNITY_SETUP_INSTANCE_ID(v);
 				v2f o;
@@ -1409,7 +1780,12 @@ Shader "SH_Ice_Floor"
 				UNITY_TRANSFER_INSTANCE_ID(v,o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
+				o.ase_texcoord3.xy = v.ase_texcoord.xy;
+				o.ase_texcoord4 = v.vertex;
+				o.ase_normal = v.normal;
 				
+				//setting value to unused interpolator channels and avoid initialization warnings
+				o.ase_texcoord3.zw = 0;
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					float3 defaultVertexValue = v.vertex.xyz;
 				#else
@@ -1450,7 +1826,8 @@ Shader "SH_Ice_Floor"
 				float3 normal : NORMAL;
 				float4 texcoord1 : TEXCOORD1;
 				float4 texcoord2 : TEXCOORD2;
-				
+				float4 ase_texcoord : TEXCOORD0;
+
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -1470,7 +1847,7 @@ Shader "SH_Ice_Floor"
 				o.normal = v.normal;
 				o.texcoord1 = v.texcoord1;
 				o.texcoord2 = v.texcoord2;
-				
+				o.ase_texcoord = v.ase_texcoord;
 				return o;
 			}
 
@@ -1512,7 +1889,7 @@ Shader "SH_Ice_Floor"
 				o.normal = patch[0].normal * bary.x + patch[1].normal * bary.y + patch[2].normal * bary.z;
 				o.texcoord1 = patch[0].texcoord1 * bary.x + patch[1].texcoord1 * bary.y + patch[2].texcoord1 * bary.z;
 				o.texcoord2 = patch[0].texcoord2 * bary.x + patch[1].texcoord2 * bary.y + patch[2].texcoord2 * bary.z;
-				
+				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
 				#if defined(ASE_PHONG_TESSELLATION)
 				float3 pp[3];
 				for (int i = 0; i < 3; ++i)
@@ -1548,8 +1925,28 @@ Shader "SH_Ice_Floor"
 					SurfaceOutputStandard o = (SurfaceOutputStandard)0;
 				#endif
 				
+				float time45 = _VoronoiScale.x;
+				float2 texCoord50 = IN.ase_texcoord3.xy * float2( 1,1 ) + float2( 0,0 );
+				float2 coords45 = texCoord50 * _VoronoiScale.y;
+				float2 id45 = 0;
+				float2 uv45 = 0;
+				float voroi45 = voronoi45( coords45, time45, id45, uv45, 0 );
+				float IceMask49 = (0.0 + (voroi45 - _Vector0.x) * (1.0 - 0.0) / (_Vector0.y - _Vector0.x));
+				float clampResult85 = clamp( IceMask49 , 0.0 , 1.0 );
+				float4 lerpResult83 = lerp( _IceColor , _IceColor2 , clampResult85);
+				float4 Ice60 = lerpResult83;
+				float simplePerlin2D25 = snoise( IN.ase_texcoord4.xyz.xy*_SnowNoiseScale );
+				simplePerlin2D25 = simplePerlin2D25*0.5 + 0.5;
+				float SnowTexture39 = (0.0 + (simplePerlin2D25 - _SnowNoiseRemap.x) * (1.0 - 0.0) / (_SnowNoiseRemap.y - _SnowNoiseRemap.x));
+				float clampResult89 = clamp( SnowTexture39 , 0.0 , 1.0 );
+				float4 lerpResult88 = lerp( _SnowColor , _SnowColor2 , clampResult89);
+				float4 Snow62 = lerpResult88;
+				float clampResult86 = clamp( (0.0 + (IN.ase_normal.z - _RemapVertex.x) * (1.0 - 0.0) / (_RemapVertex.y - _RemapVertex.x)) , 0.0 , 1.0 );
+				float SnowMask33 = clampResult86;
+				float4 lerpResult75 = lerp( Ice60 , Snow62 , SnowMask33);
+				float4 Color80 = lerpResult75;
 				
-				o.Albedo = fixed3( 0.5, 0.5, 0.5 );
+				o.Albedo = Color80.rgb;
 				o.Normal = fixed3( 0, 0, 1 );
 				o.Emission = half3( 0, 0, 0 );
 				o.Alpha = 1;
@@ -1831,16 +2228,86 @@ Shader "SH_Ice_Floor"
 }
 /*ASEBEGIN
 Version=18900
-1920;0;1920;1019;1527.971;343.4184;1;True;False
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;13;-636.9714,120.5816;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.TextureCoordinatesNode;17;-826.9714,283.5816;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.PosVertexDataNode;12;-1027.971,-64.41843;Inherit;False;0;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;0;0,0;Float;False;False;-1;2;ASEMaterialInspector;0;9;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ExtraPrePass;0;0;ExtraPrePass;6;False;True;0;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;True;0;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;True;0;False;-1;False;True;0;False;-1;False;True;True;True;True;True;0;False;-1;False;False;False;False;False;False;False;True;False;255;False;-1;255;False;-1;255;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;True;3;False;-1;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;0;False;True;1;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;-1;False;True;True;True;True;True;0;False;-1;False;False;False;False;False;False;False;True;False;255;False;-1;255;False;-1;255;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;True;3;False;-1;True;True;0;False;-1;0;False;-1;True;1;LightMode=ForwardBase;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;1;0,0;Float;False;True;-1;2;ASEMaterialInspector;0;9;SH_Ice_Floor;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ForwardBase;0;1;ForwardBase;18;False;True;0;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;True;0;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;True;0;False;-1;False;True;0;False;-1;False;True;True;True;True;True;0;False;-1;False;False;False;False;False;False;False;True;False;255;False;-1;255;False;-1;255;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;True;3;False;-1;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;0;False;True;1;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=ForwardBase;False;0;;0;0;Standard;40;Workflow,InvertActionOnDeselection;1;Surface;0;  Blend;0;  Refraction Model;0;  Dither Shadows;1;Two Sided;1;Deferred Pass;1;Transmission;0;  Transmission Shadow;0.5,False,-1;Translucency;0;  Translucency Strength;1,False,-1;  Normal Distortion;0.5,False,-1;  Scattering;2,False,-1;  Direct;0.9,False,-1;  Ambient;0.1,False,-1;  Shadow;0.5,False,-1;Cast Shadows;1;  Use Shadow Threshold;0;Receive Shadows;1;GPU Instancing;1;LOD CrossFade;1;Built-in Fog;1;Ambient Light;1;Meta Pass;1;Add Pass;1;Override Baked GI;0;Extra Pre Pass;0;Tessellation;0;  Phong;0;  Strength;0.5,False,-1;  Type;0;  Tess;16,False,-1;  Min;10,False,-1;  Max;25,False,-1;  Edge Length;16,False,-1;  Max Displacement;25,False,-1;Fwd Specular Highlights Toggle;0;Fwd Reflections Toggle;0;Disable Batching;0;Vertex Position,InvertActionOnDeselection;1;0;6;False;True;True;True;True;True;False;;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;2;0,0;Float;False;False;-1;2;ASEMaterialInspector;0;9;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ForwardAdd;0;2;ForwardAdd;0;False;True;0;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;True;0;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;True;0;False;-1;False;True;0;False;-1;False;True;True;True;True;True;0;False;-1;False;False;False;False;False;False;False;True;False;255;False;-1;255;False;-1;255;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;True;3;False;-1;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;0;False;True;4;1;False;-1;1;False;-1;0;1;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;True;1;LightMode=ForwardAdd;False;0;;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;3;0,0;Float;False;False;-1;2;ASEMaterialInspector;0;9;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;Deferred;0;3;Deferred;0;False;True;0;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;True;0;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;True;0;False;-1;False;True;0;False;-1;False;True;True;True;True;True;0;False;-1;False;False;False;False;False;False;False;True;False;255;False;-1;255;False;-1;255;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;True;3;False;-1;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=Deferred;True;2;0;;0;0;Standard;0;False;0
+1920;0;1920;1019;3092.459;693.277;1.767289;True;False
+Node;AmplifyShaderEditor.CommentaryNode;53;-2108.424,324.0359;Inherit;False;1073.682;338.7892;IceMask;6;49;51;52;45;47;50;;1,1,1,1;0;0
+Node;AmplifyShaderEditor.CommentaryNode;79;-223.0409,-267.0536;Inherit;False;627.1353;388.1404;Color;10;80;76;77;78;75;0;3;5;2;4;;1,1,1,1;0;0
+Node;AmplifyShaderEditor.CommentaryNode;74;-966.4985,126.9464;Inherit;False;716;449.628;Ice;6;85;44;59;84;83;60;;1,1,1,1;0;0
+Node;AmplifyShaderEditor.CommentaryNode;73;-964.306,-381.2448;Inherit;False;708;499.5241;Snow;6;62;56;61;87;88;89;;1,1,1,1;0;0
+Node;AmplifyShaderEditor.CommentaryNode;38;-1910.366,-380.4638;Inherit;False;881.0894;350;SnowMask;5;33;22;24;23;86;;1,1,1,1;0;0
+Node;AmplifyShaderEditor.CommentaryNode;40;-2179.722,-1.209244;Inherit;False;1149.385;309.1983;SnowTexture;6;25;29;28;27;39;42;;1,1,1,1;0;0
+Node;AmplifyShaderEditor.Vector2Node;52;-1629.742,448.0359;Inherit;False;Property;_Vector0;Vector 0;3;0;Create;True;0;0;0;False;0;False;0,0;0.01,0.22;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
+Node;AmplifyShaderEditor.NoiseGeneratorNode;25;-1897.325,48.98901;Inherit;True;Simplex2D;True;False;2;0;FLOAT2;0,0;False;1;FLOAT;1;False;1;FLOAT;0
+Node;AmplifyShaderEditor.NormalVertexDataNode;22;-1884.366,-332.4638;Inherit;False;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.ColorNode;59;-923.4985,165.9461;Inherit;False;Property;_IceColor;IceColor;5;0;Create;True;0;0;0;False;0;False;0,0,0,0;0.3304112,0.8234528,0.9339623,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.ClampOpNode;86;-1409.87,-214.0717;Inherit;False;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;1;False;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode;44;-887.7942,502.5741;Inherit;False;49;IceMask;1;0;OBJECT;;False;1;FLOAT;0
+Node;AmplifyShaderEditor.VoronoiNode;45;-1790.597,382.9969;Inherit;False;0;0;1;0;1;False;1;False;False;4;0;FLOAT2;0,0;False;1;FLOAT;0;False;2;FLOAT;1;False;3;FLOAT;0;False;3;FLOAT;0;FLOAT2;1;FLOAT2;2
+Node;AmplifyShaderEditor.PosVertexDataNode;42;-2106.337,39.7907;Inherit;False;0;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.RangedFloatNode;27;-2104.321,180.6883;Inherit;False;Property;_SnowNoiseScale;SnowNoiseScale;4;0;Create;True;0;0;0;False;0;False;0;438.2;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode;76;-173.0409,10.08673;Inherit;False;33;SnowMask;1;0;OBJECT;;False;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode;81;277.6158,271.3215;Inherit;False;80;Color;1;0;OBJECT;;False;1;COLOR;0
+Node;AmplifyShaderEditor.ClampOpNode;89;-727.5493,-29.85779;Inherit;False;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;1;False;1;FLOAT;0
+Node;AmplifyShaderEditor.TextureCoordinatesNode;50;-2056.742,380.0359;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.GetLocalVarNode;78;-166.4263,-66.289;Inherit;False;62;Snow;1;0;OBJECT;;False;1;COLOR;0
+Node;AmplifyShaderEditor.TFHCRemapNode;51;-1433.742,381.0359;Inherit;False;5;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;1;False;3;FLOAT;0;False;4;FLOAT;1;False;1;FLOAT;0
+Node;AmplifyShaderEditor.ColorNode;84;-923.2869,335.2248;Inherit;False;Property;_IceColor2;IceColor2;6;0;Create;True;0;0;0;False;0;False;0,0,0,0;0.2225881,0.6079255,0.7735849,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.Vector2Node;47;-2011.932,500.8251;Inherit;False;Property;_VoronoiScale;VoronoiScale;2;0;Create;True;0;0;0;False;0;False;0,0;-12.4,24.7;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
+Node;AmplifyShaderEditor.TFHCRemapNode;23;-1623.365,-230.4635;Inherit;False;5;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;1;False;3;FLOAT;0;False;4;FLOAT;1;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode;39;-1253.341,50.79071;Inherit;False;SnowTexture;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.ClampOpNode;85;-723.2869,453.2248;Inherit;False;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;1;False;1;FLOAT;0
+Node;AmplifyShaderEditor.Vector2Node;24;-1871.366,-189.4635;Inherit;False;Property;_RemapVertex;RemapVertex;0;0;Create;True;0;0;0;False;0;False;0,0;0.27,1.02;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
+Node;AmplifyShaderEditor.Vector2Node;29;-1665.225,109.9886;Inherit;False;Property;_SnowNoiseRemap;SnowNoiseRemap;1;0;Create;True;0;0;0;False;0;False;0,0;-1.56,0.4;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
+Node;AmplifyShaderEditor.RegisterLocalVarNode;60;-448.4985,303.9461;Inherit;False;Ice;-1;True;1;0;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode;80;199.892,-133.4934;Inherit;False;Color;-1;True;1;0;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.TFHCRemapNode;28;-1462.226,52.989;Inherit;False;5;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;1;False;3;FLOAT;0;False;4;FLOAT;1;False;1;FLOAT;0
+Node;AmplifyShaderEditor.ColorNode;87;-937.5493,-162.8578;Inherit;False;Property;_SnowColor2;SnowColor2;8;0;Create;True;0;0;0;False;0;False;0,0,0,0;0.6619349,0.7319108,0.8018868,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.LerpOp;83;-593.2869,305.2248;Inherit;False;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;FLOAT;0;False;1;COLOR;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode;49;-1234.742,378.0359;Inherit;False;IceMask;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode;62;-441.306,-214.2448;Inherit;False;Snow;-1;True;1;0;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode;33;-1253.274,-234.0131;Inherit;False;SnowMask;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.LerpOp;88;-594.5493,-209.8578;Inherit;False;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;FLOAT;0;False;1;COLOR;0
+Node;AmplifyShaderEditor.LerpOp;75;44.09436,-127.3017;Inherit;False;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;FLOAT;0;False;1;COLOR;0
+Node;AmplifyShaderEditor.GetLocalVarNode;77;-166.7638,-140.3718;Inherit;False;60;Ice;1;0;OBJECT;;False;1;COLOR;0
+Node;AmplifyShaderEditor.GetLocalVarNode;56;-925.3436,34.2793;Inherit;False;39;SnowTexture;1;0;OBJECT;;False;1;FLOAT;0
+Node;AmplifyShaderEditor.ColorNode;61;-938.306,-338.2448;Inherit;False;Property;_SnowColor;SnowColor;7;0;Create;True;0;0;0;False;0;False;0,0,0,0;0.8578676,0.9324366,0.9622642,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;4;0,0;Float;False;False;-1;2;ASEMaterialInspector;0;9;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;Meta;0;4;Meta;0;False;True;0;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;True;0;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;True;0;False;-1;False;True;0;False;-1;False;True;True;True;True;True;0;False;-1;False;False;False;False;False;False;False;True;False;255;False;-1;255;False;-1;255;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;True;3;False;-1;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=Meta;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;1;514.6088,254.2607;Float;False;True;-1;2;ASEMaterialInspector;0;9;SH_Ice_Floor;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ForwardBase;0;1;ForwardBase;18;False;True;0;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;True;0;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;True;0;False;-1;False;True;0;False;-1;False;True;True;True;True;True;0;False;-1;False;False;False;False;False;False;False;True;False;255;False;-1;255;False;-1;255;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;True;3;False;-1;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;0;False;True;1;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=ForwardBase;False;0;;0;0;Standard;40;Workflow,InvertActionOnDeselection;1;Surface;0;  Blend;0;  Refraction Model;0;  Dither Shadows;1;Two Sided;1;Deferred Pass;1;Transmission;0;  Transmission Shadow;0.5,False,-1;Translucency;0;  Translucency Strength;1,False,-1;  Normal Distortion;0.5,False,-1;  Scattering;2,False,-1;  Direct;0.9,False,-1;  Ambient;0.1,False,-1;  Shadow;0.5,False,-1;Cast Shadows;1;  Use Shadow Threshold;0;Receive Shadows;1;GPU Instancing;1;LOD CrossFade;1;Built-in Fog;1;Ambient Light;1;Meta Pass;1;Add Pass;1;Override Baked GI;0;Extra Pre Pass;0;Tessellation;0;  Phong;0;  Strength;0.5,False,-1;  Type;0;  Tess;16,False,-1;  Min;10,False,-1;  Max;25,False,-1;  Edge Length;16,False,-1;  Max Displacement;25,False,-1;Fwd Specular Highlights Toggle;0;Fwd Reflections Toggle;0;Disable Batching;0;Vertex Position,InvertActionOnDeselection;1;0;6;False;True;True;True;True;True;False;;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;2;0,0;Float;False;False;-1;2;ASEMaterialInspector;0;9;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ForwardAdd;0;2;ForwardAdd;0;False;True;0;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;True;0;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;True;0;False;-1;False;True;0;False;-1;False;True;True;True;True;True;0;False;-1;False;False;False;False;False;False;False;True;False;255;False;-1;255;False;-1;255;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;True;3;False;-1;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;0;False;True;4;1;False;-1;1;False;-1;0;1;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;True;1;LightMode=ForwardAdd;False;0;;0;0;Standard;0;False;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;5;0,0;Float;False;False;-1;2;ASEMaterialInspector;0;9;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ShadowCaster;0;5;ShadowCaster;0;False;True;0;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;True;0;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;True;0;False;-1;False;True;0;False;-1;False;True;True;True;True;True;0;False;-1;False;False;False;False;False;False;False;True;False;255;False;-1;255;False;-1;255;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;True;3;False;-1;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;False;-1;True;3;False;-1;False;True;1;LightMode=ShadowCaster;False;0;;0;0;Standard;0;False;0
-WireConnection;13;0;12;2
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;0;-41,-217.0536;Float;False;False;-1;2;ASEMaterialInspector;0;9;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;ExtraPrePass;0;0;ExtraPrePass;6;False;True;0;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;True;0;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;True;0;False;-1;False;True;0;False;-1;False;True;True;True;True;True;0;False;-1;False;False;False;False;False;False;False;True;False;255;False;-1;255;False;-1;255;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;True;3;False;-1;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;0;False;True;1;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;-1;False;True;True;True;True;True;0;False;-1;False;False;False;False;False;False;False;True;False;255;False;-1;255;False;-1;255;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;True;3;False;-1;True;True;0;False;-1;0;False;-1;True;1;LightMode=ForwardBase;False;0;;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;3;0,0;Float;False;False;-1;2;ASEMaterialInspector;0;9;New Amplify Shader;ed95fe726fd7b4644bb42f4d1ddd2bcd;True;Deferred;0;3;Deferred;0;False;True;0;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;True;0;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;True;0;False;-1;False;True;0;False;-1;False;True;True;True;True;True;0;False;-1;False;False;False;False;False;False;False;True;False;255;False;-1;255;False;-1;255;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;True;3;False;-1;False;True;3;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;DisableBatching=False=DisableBatching;True;2;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=Deferred;True;2;0;;0;0;Standard;0;False;0
+WireConnection;25;0;42;0
+WireConnection;25;1;27;0
+WireConnection;86;0;23;0
+WireConnection;45;0;50;0
+WireConnection;45;1;47;1
+WireConnection;45;2;47;2
+WireConnection;89;0;56;0
+WireConnection;51;0;45;0
+WireConnection;51;1;52;1
+WireConnection;51;2;52;2
+WireConnection;23;0;22;3
+WireConnection;23;1;24;1
+WireConnection;23;2;24;2
+WireConnection;39;0;28;0
+WireConnection;85;0;44;0
+WireConnection;60;0;83;0
+WireConnection;80;0;75;0
+WireConnection;28;0;25;0
+WireConnection;28;1;29;1
+WireConnection;28;2;29;2
+WireConnection;83;0;59;0
+WireConnection;83;1;84;0
+WireConnection;83;2;85;0
+WireConnection;49;0;51;0
+WireConnection;62;0;88;0
+WireConnection;33;0;86;0
+WireConnection;88;0;61;0
+WireConnection;88;1;87;0
+WireConnection;88;2;89;0
+WireConnection;75;0;77;0
+WireConnection;75;1;78;0
+WireConnection;75;2;76;0
+WireConnection;1;0;81;0
 ASEEND*/
-//CHKSM=8D1701057A7D393342A0E2F11793C30B20FD2761
+//CHKSM=88A8F5846D3848748CB797851E9DE376401088F2

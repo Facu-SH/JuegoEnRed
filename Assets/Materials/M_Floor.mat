@@ -24,6 +24,17 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Ints: []
-    m_Floats: []
-    m_Colors: []
+    m_Floats:
+    - _Offset: 0
+    - _SnowNoiseScale: 438.2
+    m_Colors:
+    - _IceColor: {r: 0.3304112, g: 0.82345283, b: 0.9339623, a: 1}
+    - _IceColor2: {r: 0.22258809, g: 0.60792553, b: 0.7735849, a: 1}
+    - _RemapVertex: {r: 0.27, g: 1.02, b: 0, a: 0}
+    - _SnowColor: {r: 0.8578676, g: 0.9324366, b: 0.9622642, a: 1}
+    - _SnowColor2: {r: 0.66193485, g: 0.7319108, b: 0.8018868, a: 1}
+    - _SnowNoiseRemap: {r: -1.56, g: 0.4, b: 0, a: 0}
+    - _Vector0: {r: 0.01, g: 0.22, b: 0, a: 0}
+    - _VoronoiScale: {r: -12.4, g: 24.7, b: 0, a: 0}
+    - _VoronoiScale1: {r: 0.01, g: 0.22, b: 0, a: 0}
   m_BuildTextureStacks: []

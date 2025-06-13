@@ -2694,7 +2694,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b51cf39929533c14d891060ffb784612, type: 2}
+  - {fileID: 2100000, guid: 3799478d62a023d4ea151ece62a3780c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3107,6 +3107,63 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1001 &7295843490737366012
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3838690261500983783, guid: be1dbd2a1e47b8944b3ef644d4f66c52, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3838690261500983783, guid: be1dbd2a1e47b8944b3ef644d4f66c52, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3838690261500983783, guid: be1dbd2a1e47b8944b3ef644d4f66c52, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3838690261500983783, guid: be1dbd2a1e47b8944b3ef644d4f66c52, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3838690261500983783, guid: be1dbd2a1e47b8944b3ef644d4f66c52, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3838690261500983783, guid: be1dbd2a1e47b8944b3ef644d4f66c52, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3838690261500983783, guid: be1dbd2a1e47b8944b3ef644d4f66c52, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3838690261500983783, guid: be1dbd2a1e47b8944b3ef644d4f66c52, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3838690261500983783, guid: be1dbd2a1e47b8944b3ef644d4f66c52, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3838690261500983783, guid: be1dbd2a1e47b8944b3ef644d4f66c52, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4471534401279501149, guid: be1dbd2a1e47b8944b3ef644d4f66c52, type: 3}
+      propertyPath: m_Name
+      value: Pinguino-Model
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: be1dbd2a1e47b8944b3ef644d4f66c52, type: 3}
 --- !u!4 &7803344245052200560
 Transform:
   m_ObjectHideFlags: 0
@@ -3262,7 +3319,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c0fa2bd7cf0c61d4eb1388a24d424321, type: 2}
+  - {fileID: 2100000, guid: 3799478d62a023d4ea151ece62a3780c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3509,3 +3566,4 @@ SceneRoots:
   - {fileID: 1568847925}
   - {fileID: 1190902723}
   - {fileID: 1105082636}
+  - {fileID: 7295843490737366012}
