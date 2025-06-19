@@ -49,6 +49,7 @@ MonoBehaviour:
   - RPC_ActiveEndCanvas
   - RPC_ApplyKnockback
   - RPC_SetNameRPC
+  - RPC_GrantPowerUp
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

@@ -24,6 +24,8 @@ namespace PLayerScripts
         private bool isGrounded;
         private bool isSprintInCoolDown = false;
         private bool canBeKockBacked = false;
+        private float superSpeedTimer = 0;
+        private float currentSperSpeedMultiplier = 1;
 
         private void Awake()
         {
@@ -46,9 +48,11 @@ namespace PLayerScripts
         private void Update()
         {
             if (!photonView.IsMine) return;
+            
+            HandleSuperSpeed();
 
             inputDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-
+            
             float yaw = povComponent.m_HorizontalAxis.Value;
             playerBody.rotation = Quaternion.Euler(0f, yaw, 0f);
 
@@ -132,11 +136,29 @@ namespace PLayerScripts
             if (povComponent != null) povComponent.enabled = false;
         }
 
+        private void HandleSuperSpeed()
+        {
+            if (superSpeedTimer > 0)
+            {
+                superSpeedTimer -= Time.deltaTime;
+                currentSperSpeedMultiplier = data.SuperSpeedMultiplier;
+            }
+            else
+            {
+                currentSperSpeedMultiplier = 1;
+            }
+        }
+
+        public void ApplySuperSpeed()
+        {
+            superSpeedTimer = data.SuperSpeedTime;
+        }
+
         private Vector3 CalculateMovement()
         {
             Vector3 dir = (transform.right * inputDirection.x + transform.forward * inputDirection.y).normalized;
             float control = isGrounded ? 1f : data.AirControl;
-            float baseSpeed = data.Speed * control;
+            float baseSpeed = data.Speed * currentSperSpeedMultiplier * control;
             
             float sprintMod = 1f;
             if (isGrounded && isSprinting) sprintMod = data.SprintMultiplier;
@@ -148,6 +170,11 @@ namespace PLayerScripts
             velChange.y = 0f;
 
             return inputDirection.magnitude > 0.3f ? velChange : Vector3.zero;
+        }
+
+        public void ApplySuperJump()
+        {
+            rb.AddForce(Vector3.up * (data.JumpForce * data.SuperJumpMultiplier), ForceMode.Impulse);
         }
 
         [PunRPC]

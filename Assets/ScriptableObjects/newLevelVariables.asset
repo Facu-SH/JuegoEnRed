@@ -17,3 +17,8 @@ MonoBehaviour:
   timeToEndLevel: 120
   timeToFloorDown1: 40
   timeToFloorDown2: 80
+  timeToSpawnPowerUp: 10
+  powerUps:
+  - {fileID: 3750673644114300633, guid: d4f30f09a65a95c4da6892aaf8fd77d1, type: 3}
+  - {fileID: 8222946137736956572, guid: 19a788eacdedd2a438e7fca7c0a405a5, type: 3}
+  powerUpSpawnPoint: {fileID: 0}

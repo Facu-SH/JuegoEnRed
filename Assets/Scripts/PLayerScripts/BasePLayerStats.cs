@@ -10,9 +10,12 @@ public class BasePLayerStats : ScriptableObject
     [Tooltip("Velocidad base")] [SerializeField] private float speed;
     [SerializeField] private float airControl;
     [Tooltip("Velocidad máxima")] [SerializeField] private float maxVelocity;
+    [SerializeField] private float superSpeedTime = 5;
+    [SerializeField] private float superSpeedMultiplier = 2;
     
     [Header("Salto")]
     [SerializeField] private float jumpForce;
+    [SerializeField] private float superJumpMultiplier = 3;
     [SerializeField] private int groundLayerIndex;
 
     [Header("Sprint")]
@@ -31,6 +34,7 @@ public class BasePLayerStats : ScriptableObject
     public int RespawnLayerIndex => respawnLayerIndex;
     public float Speed => speed;
     public float JumpForce => jumpForce;
+    public float SuperJumpMultiplier => superJumpMultiplier;
     public float AirControl => airControl;
     public float MaxVelocity => maxVelocity;
     public int GroundLayerIndex => groundLayerIndex;
@@ -40,4 +44,6 @@ public class BasePLayerStats : ScriptableObject
     public float MinStaminaToSprint => minStaminaToSprint;
     public Material[] TeamMaterials => teamMaterials;
     public AudioClip FallSound => fallSound;
+    public float SuperSpeedTime => superSpeedTime;
+    public float SuperSpeedMultiplier => superSpeedMultiplier;
 }

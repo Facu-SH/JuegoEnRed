@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Enums;
 using PLayerScripts;
 using PLayerScripts.WeaponScripts;
 using UI;
@@ -52,6 +53,19 @@ namespace Managers
             SetColorAndTpPlayer();
             levelUI.ActivateUI(Team);
             GameManager.Instance.shouldWait = false;
+        }
+
+        public void ApplyPowerUp(PowerUpType powerUpType)
+        {
+            switch (powerUpType)
+            {
+                case PowerUpType.SuperJump:
+                    playerMovement.ApplySuperJump();
+                    break;
+                case PowerUpType.SuperSpeed:
+                    playerMovement.ApplySuperSpeed();
+                    break;
+            }
         }
 
         private void SetColorAndTpPlayer()

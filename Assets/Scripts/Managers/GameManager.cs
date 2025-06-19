@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
-using ExitGames.Client.Photon;
+using Auxiliars;
+using Enums;
 using LevelScripts;
 using Photon.Pun;
+using Photon.Realtime;
 using UI;
 using UnityEngine;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 namespace Managers
 {
@@ -23,6 +27,9 @@ namespace Managers
         private bool isEnd;
         private bool[] isFloorDown = new bool[]{false,false};
         public bool shouldWait;
+        private Dictionary<int, List<PickupRequest>> pickupRequests = new();
+        private HashSet<int> resolving = new();
+        private float spawnTimer = 0f;
 
         private Dictionary<int, int> teamScores = new Dictionary<int, int>
         {
@@ -56,6 +63,15 @@ namespace Managers
 
         private void Update()
         {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                spawnTimer += Time.deltaTime;
+                if (spawnTimer >= data.TimeToSpawnPowerUp)
+                {
+                    spawnTimer = 0;
+                    SpawnPowerUp();
+                }
+            }
             if (shouldWait) return;
             
             if (!isEnd && levelUI != null && startTime > 0)
@@ -82,6 +98,21 @@ namespace Managers
                     TryEndGame(true);
                 }
             }
+        }
+
+        private void SpawnPowerUp()
+        {
+            if (!PhotonNetwork.IsMasterClient) return;
+            
+            int count = data.PowerUps.Count;  
+            int randomIndex = UnityEngine.Random.Range(0, count);
+            GameObject powerUpPrefab = data.PowerUps[randomIndex];
+            
+            PhotonNetwork.Instantiate(
+                powerUpPrefab.name,
+                data.PowerUpSpawnPoint,
+                Quaternion.identity
+            );
         }
 
         private void OnJoinedRoom()
@@ -164,6 +195,48 @@ namespace Managers
                     photonView.RPC(nameof(RPC_ActiveEndCanvas), RpcTarget.AllBuffered, winnerTeamIndex.Key);
                 }
             }
+        }
+        public void RegisterPowerUpPickup(int powerUpViewID, PowerUpType type, Player player, double timestamp)
+        {
+            if (!pickupRequests.ContainsKey(powerUpViewID))
+                pickupRequests[powerUpViewID] = new List<PickupRequest>();
+
+            pickupRequests[powerUpViewID].Add(new PickupRequest {
+                Player    = player,
+                Timestamp = timestamp,
+                Type      = type
+            });
+            
+            if (resolving.Add(powerUpViewID))
+                StartCoroutine(ResolvePickup(powerUpViewID));
+        }
+        private IEnumerator ResolvePickup(int viewID)
+        {
+            yield return new WaitForSeconds(0.1f);
+            
+            if (!pickupRequests.TryGetValue(viewID, out var requests) || requests.Count == 0)
+            {
+                resolving.Remove(viewID);
+                yield break;
+            }
+
+            var winner = requests.OrderBy(r => r.Timestamp).First();
+            
+            photonView.RPC(
+                nameof(RPC_GrantPowerUp),
+                winner.Player,
+                (int)winner.Type
+            );
+            
+            pickupRequests.Remove(viewID);
+            resolving.Remove(viewID);
+        }
+        [PunRPC]
+        private void RPC_GrantPowerUp(int type)
+        {
+            PowerUpType puType = (PowerUpType)type;
+            
+            MyPlayerManager.Instance.ApplyPowerUp(puType);
         }
 
         [PunRPC]
