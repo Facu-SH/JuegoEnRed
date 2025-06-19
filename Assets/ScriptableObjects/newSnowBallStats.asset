@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: newSnowBallStats
   m_EditorClassIdentifier: 
   snowballPrefab: {fileID: 1996533054942051382, guid: b8b160b393201ff40b81ed93de5a976b, type: 3}
-  snowballSpeed: 15
+  snowballSpeed: 17
   velocityInfluence: 1
   lifeTime: 5
   playerLayerIndex: 7
-  knockbackForce: 10
+  knockbackForce: 12
   damage: 10
   explodeSound: {fileID: 8300000, guid: 7230415354ccadd4b90e98d5e9fbc99c, type: 3}
   shootingSound: {fileID: 8300000, guid: ada33a6e9a7b8ca40b461ec528e70554, type: 3}
-  fireRate: 0.6
+  fireRate: 0.65
   splashRadius: 1
   iceParticlesPrefab: {fileID: 5112403345868107898, guid: 6f34ef0d986e9db4199cf75805f79753, type: 3}

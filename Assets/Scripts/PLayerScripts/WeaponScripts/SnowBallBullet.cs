@@ -66,7 +66,7 @@ namespace PLayerScripts.WeaponScripts
             // RPC de knockback
             if (col.TryGetComponent<PhotonView>(out var targetPv))
             {
-                Vector3 dir = (col.transform.position - transform.position).normalized;
+                Vector3 dir = ((col.transform.position - transform.position) + new Vector3(0,1,0)).normalized;
                 targetPv.RPC(
                     nameof(Movement.RPC_ApplyKnockback),
                     targetPv.Owner,

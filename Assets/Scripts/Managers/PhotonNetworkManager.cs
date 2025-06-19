@@ -30,8 +30,8 @@ namespace Managers
             
             PhotonNetwork.NetworkingClient.StateChanged += OnClientStateChanged;
             
-            PhotonNetwork.SendRate           = 40;  // paquetes por segundo
-            PhotonNetwork.SerializationRate  = 20;  // OnPhotonSerializeView por segundo
+            PhotonNetwork.SendRate           = 60;  // paquetes por segundo
+            PhotonNetwork.SerializationRate  = 30;  // OnPhotonSerializeView por segundo
         }
 
         private void Start()
