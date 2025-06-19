@@ -22,4 +22,5 @@ MonoBehaviour:
   explodeSound: {fileID: 8300000, guid: 7230415354ccadd4b90e98d5e9fbc99c, type: 3}
   shootingSound: {fileID: 8300000, guid: ada33a6e9a7b8ca40b461ec528e70554, type: 3}
   fireRate: 0.6
+  splashRadius: 1
   iceParticlesPrefab: {fileID: 5112403345868107898, guid: 6f34ef0d986e9db4199cf75805f79753, type: 3}

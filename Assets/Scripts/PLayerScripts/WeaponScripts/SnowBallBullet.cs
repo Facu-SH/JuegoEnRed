@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using Enums;
 using Interfaces;
 using Managers;
@@ -7,12 +7,12 @@ using UnityEngine;
 
 namespace PLayerScripts.WeaponScripts
 {
-    public class SnowballProjectile : MonoBehaviourPun
+    public class SnowBallBullet : MonoBehaviourPun
     {
         [SerializeField] private SnowBallStats data;
         [SerializeField] private Rigidbody rb;
-
         private TeamColor team;
+        private bool shouldCollide = true;
 
         void Awake()
         {
@@ -29,27 +29,59 @@ namespace PLayerScripts.WeaponScripts
 
         void OnTriggerEnter(Collider other)
         {
-            if (!photonView.IsMine) return;
+            if (!shouldCollide || !photonView.IsMine)
+                return;
+            
+            shouldCollide = false;
 
-            if (other.gameObject.layer == data.PlayerLayerIndex)
+            PhotonNetwork.Instantiate(
+                data.IceParticlesPrefab.name,
+                transform.position,
+                Quaternion.identity
+            );
+            
+            PhotonNetwork.Destroy(gameObject);
+            
+            int mask = 1 << data.PlayerLayerIndex;
+            Collider[] hits = Physics.OverlapSphere(transform.position, data.SplashRadius, mask);
+
+            // 3) Dedupe por gameObject antes de aplicar impacto
+            var processed = new HashSet<GameObject>();
+            foreach (var hit in hits)
             {
-                if (other.TryGetComponent<PhotonView>(out var targetPv))
+                var go = hit.transform.root.gameObject; 
+                // o hit.gameObject si todos tus colliders están en el root
+                if (processed.Add(go))
                 {
-                    var dir = (other.transform.position - transform.position).normalized;
-                    var knockForce = dir * data.KnockbackForce;
-                    targetPv.RPC(nameof(Movement.RPC_ApplyKnockback), targetPv.Owner, knockForce);
-                }
-
-                if (other.TryGetComponent<ITeam>(out var otherTeam) && otherTeam.Team != team
-                                                                    && other.TryGetComponent<IDamageable>(
-                                                                        out var damageable))
-                {
-                    damageable.GetDamage(data.Damage);
+                    ApplyImpact(hit);
                 }
             }
+        }
 
-            PhotonNetwork.Instantiate(data.IceParticlesPrefab.name, transform.position, Quaternion.identity);
-            PhotonNetwork.Destroy(gameObject);
+
+        private void ApplyImpact(Collider col)
+        {
+            if (!col.TryGetComponent<IDamageable>(out var dmg)) return;
+
+            // RPC de knockback
+            if (col.TryGetComponent<PhotonView>(out var targetPv))
+            {
+                Vector3 dir = (col.transform.position - transform.position).normalized;
+                targetPv.RPC(
+                    nameof(Movement.RPC_ApplyKnockback),
+                    targetPv.Owner,
+                    dir * data.KnockbackForce
+                );
+            }
+
+            // Daño
+            if (col.TryGetComponent<ITeam>(out var otherTeam) && otherTeam.Team != team) dmg.GetDamage(data.Damage);
+        }
+
+        void OnDrawGizmos()
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(transform.position, data.SplashRadius);
         }
 
         private void OnDestroy()

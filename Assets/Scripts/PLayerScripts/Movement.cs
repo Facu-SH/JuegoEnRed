@@ -20,6 +20,7 @@ namespace PLayerScripts
         private bool isJumping;
         private bool isGrounded;
         private bool isSprintInCoolDown = false;
+        private bool canBeKockBacked = false;
 
         private void Awake()
         {
@@ -93,6 +94,7 @@ namespace PLayerScripts
             if (other.gameObject.layer == data.GroundLayerIndex)
             {
                 isGrounded = true;
+                canBeKockBacked = true;
             }
         }
 
@@ -101,6 +103,7 @@ namespace PLayerScripts
             if (other.gameObject.layer == data.GroundLayerIndex)
             {
                 isGrounded = true;
+                canBeKockBacked = true;
             }
         }
 
@@ -131,7 +134,9 @@ namespace PLayerScripts
             Vector3 dir = (transform.right * inputDirection.x + transform.forward * inputDirection.y).normalized;
             float control = isGrounded ? 1f : data.AirControl;
             float baseSpeed = data.Speed * control;
-            float sprintMod = isSprinting ? data.SprintMultiplier : 1f;
+            
+            float sprintMod = 1f;
+            if (isGrounded && isSprinting) sprintMod = data.SprintMultiplier;
 
             Vector3 targetVel = dir * (baseSpeed * sprintMod);
             Vector3 velChange = targetVel - rb.velocity;
@@ -146,7 +151,8 @@ namespace PLayerScripts
         public void RPC_ApplyKnockback(Vector3 force, PhotonMessageInfo info)
         {
             if (!photonView.IsMine) return;
-            GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
+            if(canBeKockBacked) GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
+            canBeKockBacked = false;
         }
     }
 }

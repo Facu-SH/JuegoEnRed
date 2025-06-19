@@ -18,6 +18,9 @@ namespace PLayerScripts.WeaponScripts
         [Header("Fire Rate")]
         [SerializeField] private float fireRate = 0.2f;
         
+        [Header("Splash Effect")]
+        [SerializeField] private float splashRadius = 3f;
+        
         [Header("Particles")]
         [SerializeField] private GameObject iceParticlesPrefab;  
         
@@ -29,6 +32,7 @@ namespace PLayerScripts.WeaponScripts
         public float KnockbackForce => knockbackForce;
         public int Damage => damage;
         public float FireRate => fireRate;
+        public float SplashRadius => splashRadius;
         public GameObject IceParticlesPrefab => iceParticlesPrefab;
         public AudioClip ExplodeSound => explodeSound;
         public AudioClip ShootingSound => shootingSound;
