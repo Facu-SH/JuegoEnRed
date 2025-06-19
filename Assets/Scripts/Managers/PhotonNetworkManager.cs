@@ -29,6 +29,9 @@ namespace Managers
             DontDestroyOnLoad(gameObject);
             
             PhotonNetwork.NetworkingClient.StateChanged += OnClientStateChanged;
+            
+            PhotonNetwork.SendRate           = 40;  // paquetes por segundo
+            PhotonNetwork.SerializationRate  = 20;  // OnPhotonSerializeView por segundo
         }
 
         private void Start()
