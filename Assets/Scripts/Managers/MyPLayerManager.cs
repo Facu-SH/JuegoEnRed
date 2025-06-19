@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using PLayerScripts;
 using PLayerScripts.WeaponScripts;
@@ -32,6 +33,15 @@ namespace Managers
 
             Instance = this;
             DontDestroyOnLoad(gameObject);
+        }
+
+        private void Update()
+        {
+            if (levelUI != null && levelUI.StaminaBar != null && playerMovement != null)
+            {
+                float fill = playerMovement.CurrentStamina / playerMovement.SprintDuration;
+                levelUI.StaminaBar.fillAmount = fill;
+            }
         }
 
         public void SetPlayerShootingInstance(Shooting shooting)

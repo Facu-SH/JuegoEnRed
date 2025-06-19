@@ -3,6 +3,7 @@ using Managers;
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UI
 {
@@ -16,6 +17,8 @@ namespace UI
         [Header("Team Scores")] 
         [SerializeField] private TextMeshProUGUI teamBlueScoreText;
         [SerializeField] private TextMeshProUGUI teamRedScoreText;
+        [Header("Sprint")] 
+        public Image StaminaBar;
 
         [Header("Win/Lose")]
         [SerializeField] private GameObject losePanel;

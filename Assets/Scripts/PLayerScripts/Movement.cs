@@ -7,6 +7,9 @@ namespace PLayerScripts
 {
     public class Movement : MonoBehaviourPun
     {
+        public float CurrentStamina => currentStamina;
+        public float SprintDuration => data.SprintDuration;
+        
         [SerializeField] private BasePLayerStats data;
         [SerializeField] private Rigidbody rb;
         [SerializeField] private Transform playerBody;
