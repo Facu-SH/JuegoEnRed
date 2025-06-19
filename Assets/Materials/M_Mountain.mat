@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_Floor_03 1
+  m_Name: M_Mountain
   m_Shader: {fileID: 4800000, guid: 82150ad864ed6764ca000147ee8f1811, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -26,7 +26,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _Offset: 0
-    - _SnowNoiseScale: 5000
+    - _SnowNoiseScale: 7000
     m_Colors:
     - _IceColor: {r: 0.3304112, g: 0.82345283, b: 0.9339623, a: 1}
     - _IceColor2: {r: 0.22258809, g: 0.60792553, b: 0.7735849, a: 1}
