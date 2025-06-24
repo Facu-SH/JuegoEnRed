@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: WaterHealing
+  m_Shader: {fileID: 4800000, guid: 53a5a51f5f23c464db54b42eb76fbe7d, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 0
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 3000
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _Bias: 13.06
+    - _Bias2: 0.94
+    - _Deepness: 4
+    - _Escala: 0.03
+    - _Float0: 6.8
+    - _Float1: -1.09
+    - _Foam: 0.0216
+    - _FrecuenciadeOlas: 0.34
+    - _Intensidad: 1.21
+    - _VoronoiScale: 44.98
+    - __dirty: 0
+    m_Colors:
+    - _Color0: {r: 0.17590779, g: 0.49783853, b: 0.5566038, a: 0}
+    - _Color1: {r: 0.069686726, g: 0.5137794, b: 0.5471698, a: 0}
+    - _RemapOldWaves: {r: 0.51, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []
