@@ -60,7 +60,7 @@ namespace PLayerScripts
             if (isGrounded && Input.GetButtonDown("Jump"))
             {
                 isJumping = true;
-                playerAnim.JumpAnimation();
+                playerAnim.JumpAnimation(); //TODO Animación
             }
 
             if (currentStamina <= 0f)
@@ -73,7 +73,7 @@ namespace PLayerScripts
             if (isSprinting)
             {
                 currentStamina -= Time.deltaTime;
-                playerAnim.MotionAnimation(1);
+                playerAnim.MotionAnimation(1); //TODO Animación
             }
             else
             {
@@ -104,7 +104,7 @@ namespace PLayerScripts
             {
                 isGrounded = true;
                 canBeKockBacked = true;
-                playerAnim.FallAnimation();
+                playerAnim.FallAnimation(); //TODO Animación
             }
         }
 
@@ -116,7 +116,7 @@ namespace PLayerScripts
                 canBeKockBacked = true;
                 if (inputDirection.magnitude > 0.3f && isGrounded)
                 {
-                    playerAnim.MotionAnimation(0.5f);
+                    playerAnim.MotionAnimation(0.5f); //TODO Animación
                 }
             }
         }
@@ -126,7 +126,7 @@ namespace PLayerScripts
             if (other.gameObject.layer == data.GroundLayerIndex)
             {
                 isGrounded = false;
-                playerAnim.JumpAnimation();
+                playerAnim.JumpAnimation(); //TODO Animación
             }
         }
 
@@ -193,11 +193,11 @@ namespace PLayerScripts
             canBeKockBacked = false;
             if (isGrounded)
             {
-                playerAnim.JumpAnimation();
+                playerAnim.JumpAnimation(); //TODO Animación
             }
             else
             {
-                playerAnim.OnAirAnimation();
+                playerAnim.OnAirAnimation(); //TODO Animación
             }
         }
     }

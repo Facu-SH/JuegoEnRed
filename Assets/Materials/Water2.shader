@@ -84,7 +84,7 @@ Shader "Water2"
 		{
 			float3 ase_vertex3Pos = v.vertex.xyz;
 			float mulTime24 = _Time.y * _TimeScale;
-			float4 appendResult33 = (float4(ase_vertex3Pos.x , ( ( sin( ( ( _WaveFrequency * ase_vertex3Pos.x ) - ( mulTime24 * _WaveSpeed ) ) ) * _WaveAmplitud ) - ase_vertex3Pos.y ) , ase_vertex3Pos.z , 0.0));
+			float4 appendResult33 = (float4(0.0 , ( ( sin( ( ( _WaveFrequency * ase_vertex3Pos.x ) - ( mulTime24 * _WaveSpeed ) ) ) * _WaveAmplitud ) - ase_vertex3Pos.y ) , 0.0 , 0.0));
 			float4 psotionChanged34 = appendResult33;
 			v.vertex.xyz += psotionChanged34.xyz;
 			v.vertex.w = 1;
@@ -110,7 +110,7 @@ Shader "Water2"
 }
 /*ASEBEGIN
 Version=18900
-2167;178;1430;823;1103.944;97.22284;1;True;False
+2167;178;1430;823;1141.514;-524.0424;1.081441;True;False
 Node;AmplifyShaderEditor.RangedFloatNode;25;-1270.572,915.3505;Inherit;False;Property;_TimeScale;TimeScale;10;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.PosVertexDataNode;20;-1119.145,770.0367;Inherit;False;0;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.RangedFloatNode;19;-1129.032,673.7898;Inherit;False;Property;_WaveFrequency;WaveFrequency;12;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0
@@ -123,11 +123,11 @@ Node;AmplifyShaderEditor.RangedFloatNode;2;-1237.773,201.1304;Inherit;False;Prop
 Node;AmplifyShaderEditor.SinTimeNode;7;-1248.091,341.489;Inherit;False;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.RangedFloatNode;28;-647.4031,971.1989;Inherit;False;Property;_WaveAmplitud;WaveAmplitud;6;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.SinOpNode;27;-583.4031,835.1989;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;29;-415.4031,835.1989;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleAddOpNode;8;-1008.655,278.5339;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;29;-415.4031,835.1989;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.VoronoiNode;1;-865.201,167.0727;Inherit;False;0;0;1;0;1;False;1;False;False;4;0;FLOAT2;0,0;False;1;FLOAT;0;False;2;FLOAT;1;False;3;FLOAT;0;False;3;FLOAT;0;FLOAT2;1;FLOAT2;2
 Node;AmplifyShaderEditor.SimpleSubtractOpNode;30;-237.4031,833.1989;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.Vector2Node;5;-841.4637,289.8866;Inherit;False;Property;_oldVoronoi;oldVoronoi;7;0;Create;True;0;0;0;False;0;False;0,0;0,0;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
-Node;AmplifyShaderEditor.VoronoiNode;1;-865.201,167.0727;Inherit;False;0;0;1;0;1;False;1;False;False;4;0;FLOAT2;0,0;False;1;FLOAT;0;False;2;FLOAT;1;False;3;FLOAT;0;False;3;FLOAT;0;FLOAT2;1;FLOAT2;2
 Node;AmplifyShaderEditor.TFHCRemapNode;4;-619.5735,166.0407;Inherit;False;5;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;1;False;3;FLOAT;0;False;4;FLOAT;1;False;1;FLOAT;0
 Node;AmplifyShaderEditor.DynamicAppendNode;33;-42.40308,829.1989;Inherit;False;FLOAT4;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.ClampOpNode;50;-401.9436,440.7772;Inherit;False;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;1;False;1;FLOAT;0
@@ -145,19 +145,17 @@ WireConnection;23;1;22;0
 WireConnection;26;0;21;0
 WireConnection;26;1;23;0
 WireConnection;27;0;26;0
-WireConnection;29;0;27;0
-WireConnection;29;1;28;0
 WireConnection;8;0;2;0
 WireConnection;8;1;7;4
+WireConnection;29;0;27;0
+WireConnection;29;1;28;0
+WireConnection;1;2;8;0
 WireConnection;30;0;29;0
 WireConnection;30;1;20;2
-WireConnection;1;2;8;0
 WireConnection;4;0;1;0
 WireConnection;4;1;5;1
 WireConnection;4;2;5;2
-WireConnection;33;0;20;1
 WireConnection;33;1;30;0
-WireConnection;33;2;20;3
 WireConnection;50;0;4;0
 WireConnection;34;0;33;0
 WireConnection;44;0;49;0
@@ -166,4 +164,4 @@ WireConnection;44;2;50;0
 WireConnection;0;0;44;0
 WireConnection;0;11;35;0
 ASEEND*/
-//CHKSM=D6EE5EDDD2950B0954B60F5035B9F84C5FBF88D9
+//CHKSM=9FF8DE3DCAE393D523F275A5FA6FFFEF5EA091DD

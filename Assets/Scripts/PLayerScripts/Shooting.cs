@@ -34,7 +34,7 @@ namespace PLayerScripts.WeaponScripts
             if (Time.time >= nextFireTime && Input.GetButton("Fire1"))
             {
                 nextFireTime = Time.time + data.FireRate;
-                playerAnim.ShootAnimation();
+                playerAnim.ShootAnimation(); //TODO Animación
                 Shoot();
             }
         }
