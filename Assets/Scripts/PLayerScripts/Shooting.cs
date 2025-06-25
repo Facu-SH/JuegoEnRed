@@ -12,6 +12,7 @@ namespace PLayerScripts.WeaponScripts
         [SerializeField] private SnowBallStats data;
         [SerializeField] private Rigidbody playerRb;
         [SerializeField] private TeamColor team;
+        [SerializeField] private PlayerAnimatios playerAnim;
 
         public TeamColor Team => team;
 
@@ -33,6 +34,7 @@ namespace PLayerScripts.WeaponScripts
             if (Time.time >= nextFireTime && Input.GetButton("Fire1"))
             {
                 nextFireTime = Time.time + data.FireRate;
+                playerAnim.ShootAnimation();
                 Shoot();
             }
         }

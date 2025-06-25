@@ -17,6 +17,7 @@ namespace PLayerScripts
         [SerializeField] private bool isSprinting;
         [SerializeField] private float currentStamina;
         [SerializeField] private float staminaRegenRate;
+        [SerializeField] private PlayerAnimatios playerAnim;
 
         private CinemachinePOV povComponent;
         private Vector2 inputDirection;
@@ -59,6 +60,7 @@ namespace PLayerScripts
             if (isGrounded && Input.GetButtonDown("Jump"))
             {
                 isJumping = true;
+                playerAnim.JumpAnimation();
             }
 
             if (currentStamina <= 0f)
@@ -71,6 +73,7 @@ namespace PLayerScripts
             if (isSprinting)
             {
                 currentStamina -= Time.deltaTime;
+                playerAnim.MotionAnimation(1);
             }
             else
             {
@@ -92,7 +95,6 @@ namespace PLayerScripts
                 rb.AddForce(Vector3.up * data.JumpForce, ForceMode.Impulse);
                 isJumping = false;
             }
-
             rb.AddForce(CalculateMovement(), ForceMode.VelocityChange);
         }
 
@@ -102,6 +104,7 @@ namespace PLayerScripts
             {
                 isGrounded = true;
                 canBeKockBacked = true;
+                playerAnim.FallAnimation();
             }
         }
 
@@ -111,6 +114,10 @@ namespace PLayerScripts
             {
                 isGrounded = true;
                 canBeKockBacked = true;
+                if (inputDirection.magnitude > 0.3f && isGrounded)
+                {
+                    playerAnim.MotionAnimation(0.5f);
+                }
             }
         }
 
@@ -119,6 +126,7 @@ namespace PLayerScripts
             if (other.gameObject.layer == data.GroundLayerIndex)
             {
                 isGrounded = false;
+                playerAnim.JumpAnimation();
             }
         }
 
@@ -183,6 +191,14 @@ namespace PLayerScripts
             if (!photonView.IsMine) return;
             if(canBeKockBacked) GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
             canBeKockBacked = false;
+            if (isGrounded)
+            {
+                playerAnim.JumpAnimation();
+            }
+            else
+            {
+                playerAnim.OnAirAnimation();
+            }
         }
     }
 }
