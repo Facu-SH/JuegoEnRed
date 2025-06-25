@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.7065049, g: 0.9343234, b: 0.93795276, a: 1}
+  m_IndirectSpecularColor: {r: 0.7064742, g: 0.93432564, b: 0.93795776, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1301,7 +1301,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1020626321
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1337,6 +1337,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldownTime: 5
+  powerUpType: 1
   fill: {fileID: 735088084}
 --- !u!1001 &1060635934
 PrefabInstance:
@@ -2206,12 +2207,12 @@ RectTransform:
   - {fileID: 790033863}
   - {fileID: 223974227}
   - {fileID: 945421783}
-  - {fileID: 1063994465}
-  - {fileID: 1989359205}
-  - {fileID: 796284476}
   - {fileID: 324557263}
   - {fileID: 1020626321}
   - {fileID: 2030291895}
+  - {fileID: 1063994465}
+  - {fileID: 1989359205}
+  - {fileID: 796284476}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2250,6 +2251,9 @@ MonoBehaviour:
   - {fileID: 223974226}
   - {fileID: 945421782}
   - {fileID: 324557261}
+  powerUpTimerUIList:
+  - {fileID: 1020626322}
+  - {fileID: 2030291896}
 --- !u!114 &1568847928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3161,7 +3165,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2030291895
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3196,7 +3200,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcf578e653f84824823b376cbd3ef525, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cooldownTime: 5
+  cooldownTime: 1
+  powerUpType: 0
   fill: {fileID: 307326448}
 --- !u!1 &2052447778
 GameObject:

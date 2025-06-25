@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Enums;
 using Managers;
 using Photon.Pun;
 using TMPro;
@@ -28,8 +31,11 @@ namespace UI
         [SerializeField] private TextMeshProUGUI redLoseText;
         [SerializeField] private TextMeshProUGUI blueLoseText;
 
-        [Header("Start UI Elements List")] [SerializeField]
-        private List<GameObject> UI;
+        [Header("Start UI Elements List")] 
+        [SerializeField] private List<GameObject> UI;
+        
+        [Header("Power Ups UI Elements")] 
+        [SerializeField] private List<TimerPowerUp> powerUpTimerUIList;
 
         private void Awake()
         {
@@ -92,6 +98,15 @@ namespace UI
                 teamRedScoreText.text = $"Red Score: {score}";
             else
                 teamBlueScoreText.text = $"Blue score: {score}";
+        }
+
+        public void ActivatePowerUpTimerUI(PowerUpType _powerUpType)
+        {
+            var timer = powerUpTimerUIList.FirstOrDefault(x => x.powerUpType == _powerUpType);
+            
+            if (timer == null) throw new Exception($"Could not find powerUp type {_powerUpType}");
+            
+            timer.ActivatePowerUp();
         }
     }
 }

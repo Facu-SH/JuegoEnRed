@@ -237,6 +237,7 @@ namespace Managers
             PowerUpType puType = (PowerUpType)type;
             
             MyPlayerManager.Instance.ApplyPowerUp(puType);
+            levelUI.ActivatePowerUpTimerUI(puType);
         }
 
         [PunRPC]

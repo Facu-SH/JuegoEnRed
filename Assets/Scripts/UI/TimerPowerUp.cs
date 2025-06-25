@@ -1,11 +1,13 @@
-﻿using UnityEngine;
+﻿using Enums;
+using UnityEngine;
 using UnityEngine.UI;
 namespace UI
 {
     public class TimerPowerUp : MonoBehaviour
     {
-        [Header("Duración Power-Up")]
+        [Header("Power-Up Variables")]
         [SerializeField] private float cooldownTime;
+        public PowerUpType powerUpType;
 
         [Header("UI")]
         [SerializeField] private Image fill;
