@@ -96,5 +96,15 @@ namespace Managers
             base.OnRoomPropertiesUpdate(propsThatChanged);
             OnRoomPropertiesUpdateEvent?.Invoke(propsThatChanged);
         }
+        public override void OnPlayerEnteredRoom(Player newPlayer)
+        {
+            MyPlayerManager.Instance.ShowJoinLeaveMessageLevelUI(newPlayer.NickName, true);
+        }
+
+        public override void OnPlayerLeftRoom(Player otherPlayer)
+        {
+            MyPlayerManager.Instance.ShowJoinLeaveMessageLevelUI(otherPlayer.NickName, false);
+        }
+
     }
 }

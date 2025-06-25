@@ -5,6 +5,7 @@ using Enums;
 using Managers;
 using Photon.Pun;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -36,6 +37,9 @@ namespace UI
         
         [Header("Power Ups UI Elements")] 
         [SerializeField] private List<TimerPowerUp> powerUpTimerUIList;
+        
+        [Header("Join or Leave UI Elements")] 
+        [SerializeField] private GameObject message;
 
         private void Awake()
         {
@@ -107,6 +111,13 @@ namespace UI
             if (timer == null) throw new Exception($"Could not find powerUp type {_powerUpType}");
             
             timer.ActivatePowerUp();
+        }
+        
+        public void ShowJoinLeaveMessage(string playerName, bool joined)
+        {
+            var go = Instantiate(message, gameObject.transform);
+            var msg = go.GetComponent<PlayerJoinLeaveMessage>();
+            msg.SetMessage(playerName, joined);
         }
     }
 }

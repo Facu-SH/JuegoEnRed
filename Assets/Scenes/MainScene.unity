@@ -2254,6 +2254,7 @@ MonoBehaviour:
   powerUpTimerUIList:
   - {fileID: 1020626322}
   - {fileID: 2030291896}
+  message: {fileID: 309084634904883566, guid: 4e4aa9ef9bdb2b249a16d323ac102614, type: 3}
 --- !u!114 &1568847928
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -50,6 +50,7 @@ MonoBehaviour:
   - RPC_ApplyKnockback
   - RPC_SetNameRPC
   - RPC_GrantPowerUp
+  - RPC_ShowJoinLeaveMessage
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

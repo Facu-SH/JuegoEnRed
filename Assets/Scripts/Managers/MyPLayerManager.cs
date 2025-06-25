@@ -101,6 +101,11 @@ namespace Managers
             if (playerShooting != null) playerShooting.enabled = !playerShooting.enabled;
         }
 
+        public void ShowJoinLeaveMessageLevelUI(string playerName, bool joined)
+        {
+            levelUI.ShowJoinLeaveMessage(playerName, joined);
+        }
+
         private void DeactivatePlayerControls()
         {
             if (playerMovement != null) playerMovement.enabled = false;

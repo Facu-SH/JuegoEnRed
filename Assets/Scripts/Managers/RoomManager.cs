@@ -17,6 +17,9 @@ namespace Managers
         {
             var nameAndRoomCode = GameManager.Instance.GetNameAndRoomCode();
             playerName = nameAndRoomCode.Key;
+            
+            PhotonNetwork.NickName = playerName; 
+            
             PhotonNetworkManager.Instance.OnJoinedRoomEvent += SpawnPlayer;
         }
 
