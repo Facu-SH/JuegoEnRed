@@ -48,19 +48,21 @@ namespace PLayerScripts
 
         private void Update()
         {
+            playerAnim.SetYSpeed(rb.velocity.y);
             if (!photonView.IsMine) return;
             
             HandleSuperSpeed();
 
             inputDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
             
+            playerAnim.MotionAnimation(rb.velocity.magnitude);
+            
             float yaw = povComponent.m_HorizontalAxis.Value;
             playerBody.rotation = Quaternion.Euler(0f, yaw, 0f);
-
+            
             if (isGrounded && Input.GetButtonDown("Jump"))
             {
                 isJumping = true;
-                playerAnim.JumpAnimation(); //TODO Animación
             }
 
             if (currentStamina <= 0f)
@@ -69,11 +71,11 @@ namespace PLayerScripts
             bool wantsSprint = Input.GetButton("Sprint") && inputDirection.magnitude > 0.3f && isGrounded &&
                                !isSprintInCoolDown;
             isSprinting = wantsSprint && currentStamina > 0f;
-
+            
             if (isSprinting)
             {
                 currentStamina -= Time.deltaTime;
-                playerAnim.MotionAnimation(1); //TODO Animación
+                playerAnim.MotionAnimation(1);
             }
             else
             {
@@ -104,7 +106,7 @@ namespace PLayerScripts
             {
                 isGrounded = true;
                 canBeKockBacked = true;
-                playerAnim.FallAnimation(); //TODO Animación
+                playerAnim.SetOnAirFalse();
             }
         }
 
@@ -116,7 +118,7 @@ namespace PLayerScripts
                 canBeKockBacked = true;
                 if (inputDirection.magnitude > 0.3f && isGrounded)
                 {
-                    playerAnim.MotionAnimation(0.5f); //TODO Animación
+                    playerAnim.SetOnAirFalse();
                 }
             }
         }
@@ -126,7 +128,7 @@ namespace PLayerScripts
             if (other.gameObject.layer == data.GroundLayerIndex)
             {
                 isGrounded = false;
-                playerAnim.JumpAnimation(); //TODO Animación
+                playerAnim.SetOnAirTrue();
             }
         }
 
@@ -191,14 +193,6 @@ namespace PLayerScripts
             if (!photonView.IsMine) return;
             if(canBeKockBacked) GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
             canBeKockBacked = false;
-            if (isGrounded)
-            {
-                playerAnim.JumpAnimation(); //TODO Animación
-            }
-            else
-            {
-                playerAnim.OnAirAnimation(); //TODO Animación
-            }
         }
     }
 }

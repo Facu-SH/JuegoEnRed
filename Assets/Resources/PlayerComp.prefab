@@ -153,7 +153,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 479022451008771019}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c260755ceb455c04f9966416d46601e6, type: 3}
   m_Name: 
@@ -181,12 +181,12 @@ MonoBehaviour:
   ObservedComponentsFoldoutOpen: 1
   Group: 0
   prefixField: -1
-  Synchronization: 3
+  Synchronization: 1
   OwnershipTransfer: 0
   observableSearch: 0
   ObservedComponents:
-  - {fileID: 0}
   - {fileID: 8133058145554245069}
+  - {fileID: 7267425539925314179}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -404,7 +404,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.01
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -515,7 +515,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   camera: {fileID: 2123452277253703110}
   virtualCamera: {fileID: 3771435528079172420}
-  Gun: {fileID: 2542370402023806828}
+  Gun: {fileID: 7294193052213727130}
+  Model: {fileID: 8190953121586225225}
   movement: {fileID: 2083881907657912741}
   nameTagComponent: {fileID: 349638829609943602}
 --- !u!1 &3396458494981530404
@@ -674,7 +675,7 @@ Transform:
   m_GameObject: {fileID: 3771435528079172420}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.027395774, y: -0.44800997, z: 4.9275627}
+  m_LocalPosition: {x: 0.027395774, y: -0.44800997, z: 4.974}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -705,7 +706,7 @@ MonoBehaviour:
   m_Lens:
     FieldOfView: 60
     OrthographicSize: 5
-    NearClipPlane: 0.32
+    NearClipPlane: 0.01
     FarClipPlane: 1000
     Dutch: 0
     ModeOverride: 0
@@ -746,7 +747,7 @@ Transform:
   m_GameObject: {fileID: 4066934978959361808}
   serializedVersion: 2
   m_LocalRotation: {x: 0.695524, y: 0.005945255, z: -0.037478313, w: 0.71750015}
-  m_LocalPosition: {x: -0.0011, y: -0.0343, z: 0.0066}
+  m_LocalPosition: {x: 0.00023, y: -0.00556, z: 0.00114}
   m_LocalScale: {x: 0.008826734, y: 0.020411827, z: 0.0445637}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1127,11 +1128,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 90f50f89b1758f643b03d6f23863e997, type: 3}
---- !u!1 &2542370402023806828 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 90f50f89b1758f643b03d6f23863e997, type: 3}
-  m_PrefabInstance: {fileID: 3425332458190907965}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2883289772303371734 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 90f50f89b1758f643b03d6f23863e997, type: 3}
@@ -1185,6 +1181,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -5494286445061294624, guid: bf2e74634aebe2e4a84134af086220f2, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: bf2e74634aebe2e4a84134af086220f2, type: 3}
       propertyPath: m_Name
       value: Pinguino-Model
@@ -1208,6 +1208,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bf2e74634aebe2e4a84134af086220f2, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4783499966980492759}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bf2e74634aebe2e4a84134af086220f2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7267425539925314179}
   m_SourcePrefab: {fileID: 100100000, guid: bf2e74634aebe2e4a84134af086220f2, type: 3}
 --- !u!4 &331406879292208282 stripped
 Transform:
@@ -1596,6 +1599,38 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerAnimator: {fileID: 196498133922413399}
+--- !u!114 &7267425539925314179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5669233891709004024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 4
+    SynchronizeType: 1
+    Name: IsOnAir
+  - Type: 9
+    SynchronizeType: 1
+    Name: ShootTrigger
+  - Type: 1
+    SynchronizeType: 1
+    Name: SpeedMotion
+  - Type: 1
+    SynchronizeType: 1
+    Name: YSpeed
+  m_SynchronizeLayers:
+  - SynchronizeType: 0
+    LayerIndex: 0
+  - SynchronizeType: 0
+    LayerIndex: 1
 --- !u!4 &5782420352470404418 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1320411542853409003, guid: bf2e74634aebe2e4a84134af086220f2, type: 3}
@@ -1761,6 +1796,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3699898355520597503, guid: bf2e74634aebe2e4a84134af086220f2, type: 3}
   m_PrefabInstance: {fileID: 4786275141458236841}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8190953121586225225 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -5494286445061294624, guid: bf2e74634aebe2e4a84134af086220f2, type: 3}
+  m_PrefabInstance: {fileID: 4786275141458236841}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8479144820460034618 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4019386439501057939, guid: bf2e74634aebe2e4a84134af086220f2, type: 3}
@@ -1846,6 +1886,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 90f50f89b1758f643b03d6f23863e997, type: 3}
       propertyPath: m_Name
       value: Snow_Gun
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 90f50f89b1758f643b03d6f23863e997, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -7,6 +7,7 @@ namespace PLayerScripts
         [SerializeField] private GameObject camera;
         [SerializeField] private GameObject virtualCamera;
         [SerializeField] private GameObject Gun;
+        [SerializeField] private GameObject Model;
         [SerializeField] private Movement movement;
         [SerializeField] private NameTag nameTagComponent;
 
@@ -17,6 +18,7 @@ namespace PLayerScripts
             movement.enabled = true;
             nameTagComponent.SetName(playerName);
             Gun.SetActive(false);
+            Model.SetActive(false);
         }
     }
 }

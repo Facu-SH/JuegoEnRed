@@ -7,11 +7,6 @@ public class PlayerAnimatios : MonoBehaviour
 {
     [SerializeField] private Animator playerAnimator;
     
-    void Update()
-    {
-        
-    }
-
     public void ShootAnimation()
     {
         playerAnimator.SetTrigger("ShootTrigger");
@@ -19,25 +14,19 @@ public class PlayerAnimatios : MonoBehaviour
 
     public void MotionAnimation(float motion)
     {
-        //Motion= 0 IDLE
-        //Motion= 0.5 WALK
-        //Motion= 1 RUN
         playerAnimator.SetFloat("SpeedMotion",motion);
-        playerAnimator.SetBool("IsOnAir",false);
     }
 
-    public void JumpAnimation()
-    {
-        playerAnimator.SetTrigger("JumpTrigger");
-        playerAnimator.SetBool("IsOnAir", true);
-    }
-    public void OnAirAnimation()
+    public void SetOnAirTrue()
     {
         playerAnimator.SetBool("IsOnAir", true);
     }
-    public void FallAnimation()
+    public void SetOnAirFalse()
     {
-        playerAnimator.SetTrigger("FallingTrigger");
         playerAnimator.SetBool("IsOnAir", false);
+    }
+    public void SetYSpeed(float ySpeed)
+    {
+        playerAnimator.SetFloat("YSpeed", ySpeed);
     }
 }
