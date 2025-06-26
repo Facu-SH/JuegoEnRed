@@ -22,15 +22,25 @@ Material:
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
-    m_TexEnvs: []
+    m_TexEnvs:
+    - _TextureSample0:
+        m_Texture: {fileID: 8400000, guid: 732c10fdb49537446a2bb239e844cdb6, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _Offset: 0
     - _SnowNoiseScale: 438.2
+    - _TessValue: 16
     m_Colors:
     - _IceColor: {r: 0.3304112, g: 0.82345283, b: 0.9339623, a: 1}
     - _IceColor2: {r: 0.22258809, g: 0.60792553, b: 0.7735849, a: 1}
     - _RemapVertex: {r: 0.27, g: 1.02, b: 0, a: 0}
+    - _Remap_Offset: {r: 0, g: 0, b: 0, a: 0}
     - _SnowColor: {r: 0.70825917, g: 0.81825083, b: 0.8679245, a: 1}
     - _SnowColor2: {r: 0.5800552, g: 0.6673454, b: 0.745283, a: 1}
     - _SnowNoiseRemap: {r: -1.56, g: 0.4, b: 0, a: 0}
