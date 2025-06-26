@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.7064742, g: 0.93432564, b: 0.93795776, a: 1}
+  m_IndirectSpecularColor: {r: 0.7065049, g: 0.9343234, b: 0.93795276, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1671,30 +1671,6 @@ PrefabInstance:
     - target: {fileID: 4324877560368041963, guid: 981356e76b001a540aeaf2e4f8029505, type: 3}
       propertyPath: m_Name
       value: PS_SnowFalling
-      objectReference: {fileID: 0}
-    - target: {fileID: 7123438504971462387, guid: 981356e76b001a540aeaf2e4f8029505, type: 3}
-      propertyPath: ShapeModule.m_Scale.x
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 7123438504971462387, guid: 981356e76b001a540aeaf2e4f8029505, type: 3}
-      propertyPath: ShapeModule.m_Scale.y
-      value: 75
-      objectReference: {fileID: 0}
-    - target: {fileID: 7123438504971462387, guid: 981356e76b001a540aeaf2e4f8029505, type: 3}
-      propertyPath: InitialModule.maxNumParticles
-      value: 3000
-      objectReference: {fileID: 0}
-    - target: {fileID: 7123438504971462387, guid: 981356e76b001a540aeaf2e4f8029505, type: 3}
-      propertyPath: InitialModule.startSize.scalar
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7123438504971462387, guid: 981356e76b001a540aeaf2e4f8029505, type: 3}
-      propertyPath: InitialModule.startSize.minScalar
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7123438504971462387, guid: 981356e76b001a540aeaf2e4f8029505, type: 3}
-      propertyPath: EmissionModule.rateOverTime.scalar
-      value: 1000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
